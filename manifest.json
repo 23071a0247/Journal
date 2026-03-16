@@ -5,10 +5,9 @@
   "display": "standalone",
   "background_color": "#FAF9F6",
   "theme_color": "#A7B49E",
-  "description": "A modular discipline and reflection journal.",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/5903/5903519.png",
+      "src": "icon.png",
       "sizes": "512x512",
       "type": "image/png"
     }
