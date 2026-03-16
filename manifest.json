@@ -1,0 +1,16 @@
+{
+  "name": "The Equinox | Personal OS",
+  "short_name": "Equinox",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#FAF9F6",
+  "theme_color": "#A7B49E",
+  "description": "A modular discipline and reflection journal.",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/5903/5903519.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
