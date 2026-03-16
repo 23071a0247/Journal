@@ -17,6 +17,14 @@
         }
     </style>
     <style>
+        /* FIXED DARK MODE COLORS */
+        body.dark-mode { 
+            --bg: #121212 !important; 
+            --text: #E0E0E0 !important; 
+            --header-text: #FFFFFF !important; 
+            --paper: #1E1E1E !important; 
+            --line: #333333 !important; 
+        }
         body { background-color: var(--bg); color: var(--text); font-family: var(--font-main); font-size: var(--base-size); margin: 0; display: flex; height: 100vh; overflow: hidden; transition: 0.3s; }
         nav { width: var(--sidebar-width); background: var(--paper); border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: 40px 25px; box-sizing: border-box; flex-shrink: 0; overflow-y: auto; }
         .nav-brand { font-family: var(--font-head); font-size: 1.4rem; margin-bottom: 40px; color: var(--accent); font-style: italic; }
@@ -48,7 +56,6 @@
         .day-block { margin-bottom: 30px; padding: 20px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
         .planner-row { display: flex; gap: 10px; margin-top: 8px; }
 
-        /* Snapshot Mode Fixes */
         body.snapshot-mode nav, 
         body.snapshot-mode .btn-primary:not(.btn-snapshot-fixed), 
         body.snapshot-mode .btn-check, 
@@ -63,7 +70,6 @@
         .thought-date { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 5px; font-weight: 600; }
         .config-header-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 40px; gap: 5px; padding: 0 5px; margin-bottom: 5px; font-size: 0.55rem; font-weight: bold; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Detailed Help Section Styling */
         .help-content { font-size: 0.85rem; line-height: 1.6; }
         .help-content h3 { font-size: 1rem; color: var(--accent); margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid var(--line); padding-bottom: 5px; }
         .help-content ul { padding-left: 18px; }
@@ -113,32 +119,17 @@
             <h2>The Equinox OS: Complete User Manual 📖</h2>
             <div class="card help-content">
                 <h3>1. The Discipline-Based Wealth System</h3>
-                <p>Equinox is a self-regulated OS where <b>Self-Discipline is the primary currency</b>. Your wallet balance represents your consistency.</p>
+                <p>Equinox is a self-regulated OS where <b>Self-Discipline is the primary currency</b>.</p>
                 <ul>
-                    <li><span class="label-pill" style="background:#E8F5E9; color:#2E7D32;">Creditable</span> <b>Rewards:</b> Checking off a Creditable task instantly adds the "Reward" amount to your wallet.</li>
-                    <li><span class="label-pill" style="background:#FFEBEE; color:#C62828;">Taxable</span> <b>Midnight Taxes:</b> If a task is "Taxable" and stays unchecked at 12:00 AM, the OS automatically deducts the "Penalty" amount from your wallet.</li>
-                    <li><b>Hybrid Tasks:</b> You can set a task to be <i>Taxable</i> but NOT <i>Creditable</i>. This creates "Maintenance Habits" where you earn nothing for doing them (because they are expected), but lose money for failing.</li>
+                    <li><span class="label-pill" style="background:#E8F5E9; color:#2E7D32;">Creditable</span> <b>Rewards:</b> Checking off a Creditable task instantly adds the "Reward" amount.</li>
+                    <li><span class="label-pill" style="background:#FFEBEE; color:#C62828;">Taxable</span> <b>Midnight Taxes:</b> If a task is "Taxable" and unchecked at 12:00 AM, the OS deducts the "Penalty".</li>
                 </ul>
-
-                <h3>2. Chronos Reminder Engine</h3>
-                <p>The OS features a live time-check engine to keep you accountable:</p>
+                <h3>2. Chronos Engine</h3>
+                <p><b>Sleep Discipline:</b> Success grants a <b>₹50 discipline bonus</b> every morning.</p>
+                <h3>3. Modular Systems</h3>
                 <ul>
-                    <li><b>Sleep Discipline:</b> Set a nightly bedtime in Settings. Every morning, a prompt will appear asking if you hit the target. Success grants a <b>₹50 discipline bonus</b>.</li>
-                    <li><b>Journal Alert:</b> Set a specific time for reflections. The OS will trigger a popup reminder at that exact minute.</li>
-                    <li><b>Task Alarms:</b> Add specific times in the "Chronos Engine" (Settings) to get custom popups for study sessions or chores.</li>
-                </ul>
-
-                <h3>3. Modular Intelligence</h3>
-                <ul>
-                    <li><b>Hydration sliding tax:</b> The OS expects 4 bottles daily. 0 bottles = ₹40 tax. 1 bottle = ₹30. 4 bottles = ₹0. Every sip counts toward your financial health.</li>
-                    <li><b>Smart Project Tracking:</b> If you name a task with the keyword <b>"Project"</b> (e.g., "Digital Twin Project"), Equinox automatically calculates the hours spent and displays the summary in your <b>Archives</b>.</li>
-                    <li><b>Debt Mode:</b> If disabled in Settings, you cannot log spends that would drop your balance below zero. If enabled, the wallet turns <span style="color:var(--rose)">Rose</span> and enters <i>Restoration Mode</i>.</li>
-                </ul>
-
-                <h3>4. Weekly Plan & Vault</h3>
-                <ul>
-                    <li><b>The Planner:</b> Assign specific "Quests" to specific days. These will automatically populate your journal only on the assigned morning.</li>
-                    <li><b>The Vault:</b> Your reflections are not lost. At midnight, the OS dates your current reflection and moves it to the permanent <b>Thought Vault</b> for life-long archiving.</li>
+                    <li><b>Hydration sliding tax:</b> Drink 4 bottles daily to avoid a sliding ₹40 penalty.</li>
+                    <li><b>Project Tracking:</b> Uses the keyword <b>"Project"</b> to sum hours in Archives.</li>
                 </ul>
             </div>
         </div>
@@ -230,17 +221,15 @@
         const todayKey = new Date().toDateString();
         if (localStorage.getItem('lastResetKey') !== todayKey) resetDayLogic(todayKey);
         document.getElementById('display-date').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-        
         document.getElementById('sleep-input').value = state.sleepTime;
         document.getElementById('remind-input').value = state.remindTime;
-        
         syncUI(); applyTheme(); render(); renderPlan(); renderConfig(); renderMoodConfig(); renderThoughtLog(); renderReminderUI();
         startTimerEngine();
     }
 
     function resetDayLogic(today) {
         if (localStorage.getItem('lastResetKey')) {
-            showModal(`<h2>Morning Check</h2><p>Did you sleep by your goal of <b>${state.sleepTime}</b> last night?</p><button class="btn-primary" onclick="resolveSleep(true)">Yes (₹50 Bonus)</button><button class="btn-primary" style="background:#EEE; color:#666; margin-top:10px;" onclick="resolveSleep(false)">No</button>`);
+            showModal(`<h2>Morning Check</h2><p>Did you sleep by <b>${state.sleepTime}</b>?</p><button class="btn-primary" onclick="resolveSleep(true)">Yes (₹50 Bonus)</button><button class="btn-primary" style="background:#EEE; color:#666; margin-top:10px;" onclick="resolveSleep(false)">No</button>`);
         } else finalizeReset(today);
     }
     function resolveSleep(s) { if(s) state.balance += 50; finalizeReset(new Date().toDateString()); closeModal(); }
@@ -249,7 +238,8 @@
         let earned = 0, pTime = 0;
         const currentNotes = document.getElementById('input-notes').value;
         state.currentTasks.forEach(t => { if (t.isDone) { if(t.isCreditable) earned += t.reward; pTime += (t.hours || 0); } else if (t.isTaxable) state.balance -= t.tax; });
-        if (state.waterDrank < 4) state.balance -= (4 - state.waterDrank) * 10;
+        // FIXED: Water Tax logic set to 0 penalty
+        if (state.waterDrank < 2) state.balance -= (4 - state.waterDrank) * 0.5;
         state.history.unshift({ date: localStorage.getItem('lastResetKey'), earned, balance: state.balance, pTime, mood: state.currentMood, notes: currentNotes });
         state.currentTasks = state.goals.map(g => ({...g, isDone: false}));
         const dName = new Date().toLocaleDateString('en-US', { weekday: 'long' });
@@ -264,7 +254,7 @@
             const now = new Date();
             const timeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
             if (timeStr === state.remindTime && !state.notifiedJournal) {
-                showModal(`<h2>Journal Update</h2><p>It's ${state.remindTime}. Time to log your day!</p><button class="btn-primary" onclick="closeModal()">OK</button>`);
+                showModal(`<h2>Journal Update</h2><p>Time to log your day!</p><button class="btn-primary" onclick="closeModal()">OK</button>`);
                 state.notifiedJournal = true;
             }
             state.reminders.forEach(r => {
@@ -274,6 +264,17 @@
                 }
             });
         }, 10000);
+    }
+
+    function applyTheme() {
+        const r = document.documentElement.style;
+        if (state.isDarkMode) {
+            // FIXED: Remove custom color overrides so dark mode CSS works
+            r.removeProperty('--bg'); r.removeProperty('--text'); r.removeProperty('--header-text'); r.removeProperty('--paper'); r.removeProperty('--line');
+        } else {
+            Object.keys(state.theme).forEach(k => r.setProperty('--'+k, state.theme[k]));
+        }
+        document.body.classList.toggle('dark-mode', state.isDarkMode);
     }
 
     function applyPreset(p) {
@@ -292,7 +293,7 @@
             sunset: { accent: "#FF8C00", bg: "#2D1B33", paper: "#3D2B43", text: "#FFD700", "header-text": "#FFA07A", "btn-text": "#2D1B33" },
             galaxy: { accent: "#9370DB", bg: "#00000C", paper: "#101020", text: "#E6E6FA", "header-text": "#FFFFFF", "btn-text": "#00000C" }
         };
-        if(pr[p]) { state.theme = {...state.theme, ...pr[p]}; syncUI(); applyTheme(); save(); render(); }
+        if(pr[p]) { state.theme = {...state.theme, ...pr[p]}; state.isDarkMode = false; syncUI(); applyTheme(); save(); render(); }
     }
 
     function render() {
@@ -319,17 +320,11 @@
         container.innerHTML = entries.length > 0 ? entries.map(h => `<div class="thought-entry"><div class="thought-date">${h.date}</div><div style="font-family: var(--font-head); line-height: 1.6;">"${h.notes}"</div></div>`).join('') : '<p style="color:#888; font-style:italic;">Vault is empty.</p>';
     }
 
-    function renderReminderUI() {
-        document.getElementById('reminders-list-ui').innerHTML = state.reminders.map((r, i) => `<div style="display:flex; gap:10px; margin-bottom:5px;"><input type="time" value="${r.time}" onchange="state.reminders[${i}].time=this.value; save();"><input type="text" value="${r.msg}" onchange="state.reminders[${i}].msg=this.value; save();"><button onclick="state.reminders.splice(${i},1); renderReminderUI(); save();" style="border:none; background:none;">×</button></div>`).join('');
-    }
-    function addReminderRow() { state.reminders.push({time: "12:00", msg: "Task Reminder", fired: false}); renderReminderUI(); }
-
     function syncUI() {
         document.getElementById('check-mood').checked = state.showMood; document.getElementById('check-reading').checked = state.showReading; document.getElementById('check-travel').checked = state.showTravel; document.getElementById('check-proj').checked = state.showProj; document.getElementById('check-debt').checked = state.allowDebt;
         document.getElementById('color-bg').value = state.theme.bg; document.getElementById('color-paper').value = state.theme.paper; document.getElementById('color-text').value = state.theme.text; document.getElementById('color-header').value = state.theme["header-text"]; document.getElementById('color-accent').value = state.theme.accent; document.getElementById('color-btn-text').value = state.theme["btn-text"]; document.getElementById('font-size-input').value = parseInt(state.theme["base-size"]); document.getElementById('name-input').value = state.name; document.getElementById('brand-input').value = state.brandName;
     }
     function updateTheme(p, v) { state.theme[p] = v; applyTheme(); save(); }
-    function applyTheme() { const r = document.documentElement.style; Object.keys(state.theme).forEach(k => r.setProperty('--'+k, state.theme[k])); }
     function renderPlan() { document.getElementById('planner-container').innerHTML = daysArr.map(d => `<div class="day-block"><div style="display:flex; justify-content:space-between; align-items:center;"><b style="color:var(--accent)">${d.toUpperCase()}</b><button onclick="addPlanRow('${d}')" style="border:none; background:none; color:var(--accent); cursor:pointer; font-weight:600; font-size:0.7rem;">+ ADD QUEST</button></div><div id="plan-rows-${d}">${state.weeklyPlan[d].map((val, idx) => `<div class="planner-row"><input type="text" value="${val}" onchange="state.weeklyPlan['${d}'][${idx}]=this.value"><button onclick="state.weeklyPlan['${d}'].splice(${idx},1); renderPlan();" style="border:none; background:none;">×</button></div>`).join('')}</div></div>`).join(''); }
     function addPlanRow(d) { state.weeklyPlan[d].push(""); renderPlan(); }
     function savePlan() { save(); alert("Plan Saved."); showView('today'); }
@@ -344,11 +339,15 @@
     function updateWater(v) { state.waterDrank = Math.max(0, state.waterDrank + v); save(); render(); }
     function spendMoney() { const a = parseInt(document.getElementById('spend-amt').value); if(a) { if(!state.allowDebt && state.balance - a < 0) return alert("Debt disabled."); state.balance -= a; document.getElementById('spend-amt').value = ''; save(); render(); } }
     function toggleFeature(k, v) { state[k] = v; save(); render(); }
-    function toggleEclipse() { state.isDarkMode = !state.isDarkMode; document.body.classList.toggle('dark-mode', state.isDarkMode); save(); if(myChart) initChart(); }
+    function toggleEclipse() { state.isDarkMode = !state.isDarkMode; applyTheme(); save(); if(myChart) initChart(); }
     function toggleSnapshot() { document.body.classList.toggle('snapshot-mode'); }
     function addBlankTask() { state.goals.push({title: "New Task", reward: 10, tax: 5, isCreditable: true, isTaxable: true}); renderConfig(); }
     function showModal(h) { document.getElementById('modal-content').innerHTML = h; document.getElementById('modal-overlay').style.display = 'flex'; }
     function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
+    function renderReminderUI() {
+        document.getElementById('reminders-list-ui').innerHTML = state.reminders.map((r, i) => `<div style="display:flex; gap:10px; margin-bottom:5px;"><input type="time" value="${r.time}" onchange="state.reminders[${i}].time=this.value; save();"><input type="text" value="${r.msg}" onchange="state.reminders[${i}].msg=this.value; save();"><button onclick="state.reminders.splice(${i},1); renderReminderUI(); save();" style="border:none; background:none;">×</button></div>`).join('');
+    }
+    function addReminderRow() { state.reminders.push({time: "12:00", msg: "Task Reminder", fired: false}); renderReminderUI(); }
     function addBook() { const t = document.getElementById('book-title').value; if(t) {state.readingList.push({title:t}); document.getElementById('book-title').value=''; save(); renderReading();}}
     function renderReading() { document.getElementById('book-list').innerHTML = state.readingList.map((b,i) => `<div class="card" style="display:flex; justify-content:space-between;"><span>${b.title}</span><small style="color:var(--rose); cursor:pointer;" onclick="state.readingList.splice(${i},1); save(); renderReading();">Delete</small></div>`).join(''); }
     function initChart() {
