@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Equinox | Personal OS</title>
     <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;1,400&family=Inter:wght@300;400;500&family=Lora:ital,wght@0,400;1,400&family=Space+Mono&display=swap" rel="stylesheet">
     <style id="dynamic-theme-vars">
@@ -66,8 +67,6 @@
         .help-block { margin-bottom: 35px; border-left: 1px solid var(--line); padding-left: 20px; }
         .help-block h3 { font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 15px; color: var(--accent); }
         .help-block p { font-size: 0.85rem; line-height: 1.7; color: var(--text); margin-bottom: 10px; }
-        .help-block ul { padding-left: 18px; margin: 10px 0; }
-        .help-block li { font-size: 0.85rem; color: var(--text); margin-bottom: 8px; }
         .help-block b { color: var(--header-text); }
         .label-pill { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; text-transform: uppercase; margin-right: 5px; }
     </style>
@@ -111,49 +110,49 @@
             <div id="thought-log-container"></div>
         </div>
         <div id="view-help" class="view">
-            <h2>The Equinox OS: Master Guide 📖</h2>
+            <h2>The Equinox Master Manual 📖</h2>
             
             <div class="help-block">
-                <h3>1. The Discipline-Based Wealth System</h3>
-                <p>Equinox is built on the philosophy that <b>consistency is currency</b>. Your wallet is not just a counter, but a real-time reflection of your discipline.</p>
+                <h3>1. The Discipline Wealth Loop</h3>
+                <p>Equinox turns focus into currency. Your balance is a real-time record of your integrity.</p>
                 <ul>
-                    <li><span class="label-pill" style="background:#E8F5E9; color:#2E7D32;">Creditable</span> <b>Rewards:</b> If enabled, checking a task instantly adds the "Reward" amount to your wallet. Use this for productive habits.</li>
-                    <li><span class="label-pill" style="background:#FFEBEE; color:#C62828;">Taxable</span> <b>Penalties:</b> If enabled, failing to check a task by midnight triggers a "Penalty" deduction. This uses loss-aversion to keep you focused.</li>
-                    <li><span class="label-pill" style="background:#F3E5F5; color:#7B1FA2;">Required</span> <b>Discipline Only:</b> You can set a task to be <i>Taxable</i> but NOT <i>Creditable</i>. This means you earn nothing for doing it, but you lose money for skipping it.</li>
+                    <li><span class="label-pill" style="background:#E8F5E9; color:#2E7D32;">Creditable</span> <b>Reward Tasks:</b> Checking these adds the "Reward" amount to your wallet instantly.</li>
+                    <li><span class="label-pill" style="background:#FFEBEE; color:#C62828;">Taxable</span> <b>Penalty Tasks:</b> If these are unchecked at midnight, the system deducts the "Penalty" amount.</li>
+                    <li><span class="label-pill" style="background:#F3E5F5; color:#7B1FA2;">Required</span> <b>Baseline Tasks:</b> Set a task to be <i>Taxable</i> but NOT <i>Creditable</i>. You earn nothing for doing it, but lose money for skipping it.</li>
                 </ul>
             </div>
 
             <div class="help-block">
-                <h3>2. The Chronos Engine (Reminders)</h3>
-                <p>Located in <b>Settings</b>, this engine tracks the time to ensure you never miss a ritual:</p>
+                <h3>2. Chronos & Sleep Discipline</h3>
+                <p>Equinox tracks your biological clock via the <b>Chronos Engine</b>:</p>
                 <ul>
-                    <li><b>Sleep Target:</b> Set your bedtime. Every morning, the system asks if you were on time. A "Yes" grants a <b>₹50 bonus</b>.</li>
-                    <li><b>Journal Alert:</b> Set a time for your nightly reflection. A popup will trigger at that exact minute.</li>
-                    <li><b>Task Reminders:</b> Add custom alerts for specific times of day (e.g. 14:00 - Start Lab Session).</li>
+                    <li><b>Sleep Discipline:</b> Set your bedtime in Settings. Every morning, the OS asks if you were on time. A "Yes" grants a <b>₹50 bonus</b>.</li>
+                    <li><b>Pop-up Reminders:</b> Add specific timestamps (e.g., 14:00 - Motor Control Lab). A notification will pop up within the browser.</li>
+                    <li><b>Journal Alert:</b> A scheduled nightly prompt to ensure you log your reflections before the midnight reset.</li>
                 </ul>
             </div>
 
             <div class="help-block">
-                <h3>3. Modular Systems</h3>
-                <p>You can turn modules on or off in the <b>Module Manager</b> to keep your UI clean:</p>
+                <h3>3. Modular Intelligence</h3>
+                <p>Customize your workspace in the <b>Module Manager</b>:</p>
                 <ul>
-                    <li><b>Hydration:</b> Operates on a <i>Sliding Tax</i>. You must drink 4 bottles to avoid penalties. 0 bottles = ₹40 tax; 4 bottles = ₹0 tax.</li>
-                    <li><b>Project Tracker:</b> The OS scans for the keyword <b>"Project"</b> in your tasks. If found, it sums the hours into the "Project Work" analytic in your archives.</li>
-                    <li><b>Debt Mode:</b> If on, you can spend into the negative. The wallet turns <span style="color:var(--rose)">Rose</span>, signaling <i>Restoration Mode</i>.</li>
+                    <li><b>Hydration sliding tax:</b> You must drink 4 bottles daily. 0 bottles = ₹40 tax; 4 bottles = ₹0 tax.</li>
+                    <li><b>Project Intelligence:</b> If a task name contains the word <b>"Project"</b>, Equinox automatically tracks those hours in your Archives.</li>
+                    <li><b>Debt Mode:</b> Spend beyond zero. The wallet turns <span style="color:var(--rose)">Rose</span>, entering <i>Restoration Mode</i>.</li>
                 </ul>
             </div>
 
             <div class="help-block">
-                <h3>4. Multi-Quest Weekly Planner</h3>
-                <p>Assign specific tasks to specific days. Use <b>+ ADD QUEST</b> in the Weekly Plan tab. These Quests will automatically appear in your Daily Journal at midnight on their assigned day, each with its own checkbox.</p>
+                <h3>4. Multi-Box Weekly Planner</h3>
+                <p>Sundays are for planning. In the Weekly Plan tab, add <b>separate boxes</b> for each task. At midnight, the OS will "inject" that day's specific boxes into your Daily Journal automatically.</p>
             </div>
 
             <div class="help-block">
-                <h3>5. Persistence & Design</h3>
+                <h3>5. Persistence & The Vault</h3>
                 <ul>
-                    <li><b>Thought Vault:</b> Every reflection you write is dated and moved here during the midnight reset.</li>
-                    <li><b>Snapshot Mode:</b> The camera icon hides all buttons for aesthetic logging. A floating camera remains to exit the mode.</li>
-                    <li><b>Theming:</b> Change any color or select from 13+ presets in the Design Studio.</li>
+                    <li><b>Thought Vault:</b> Every reflection you write is dated and archived here permanently upon reset.</li>
+                    <li><b>Snapshot Mode:</b> The camera icon hides UI buttons for aesthetic logging. Use the floating icon to exit.</li>
+                    <li><b>PWA Ready:</b> Install on your phone for a full-screen app experience.</li>
                 </ul>
             </div>
         </div>
@@ -239,18 +238,12 @@
     let myChart = null;
 
     function init() {
-        // PWA Update
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').then(() => console.log("Equinox PWA Active"));
         }
-
         const todayKey = new Date().toDateString();
         if (localStorage.getItem('lastResetKey') !== todayKey) resetDayLogic(todayKey);
         document.getElementById('display-date').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-        
-        document.getElementById('sleep-input').value = state.sleepTime;
-        document.getElementById('remind-input').value = state.remindTime;
-        
         syncUI(); applyTheme(); render(); renderPlan(); renderConfig(); renderMoodConfig(); renderThoughtLog(); renderReminderUI();
         startTimerEngine();
     }
@@ -336,9 +329,15 @@
         container.innerHTML = entries.length > 0 ? entries.map(h => `<div class="thought-entry"><div class="thought-date">${h.date}</div><div style="font-family: var(--font-head); line-height: 1.6;">"${h.notes}"</div></div>`).join('') : '<p style="color:#888; font-style:italic;">Vault is empty.</p>';
     }
 
+    function renderReminderUI() {
+        document.getElementById('reminders-list-ui').innerHTML = state.reminders.map((r, i) => `<div style="display:flex; gap:10px; margin-bottom:5px;"><input type="time" value="${r.time}" onchange="state.reminders[${i}].time=this.value; save();"><input type="text" value="${r.msg}" onchange="state.reminders[${i}].msg=this.value; save();"><button onclick="state.reminders.splice(${i},1); renderReminderUI(); save();" style="border:none; background:none;">×</button></div>`).join('');
+    }
+    function addReminderRow() { state.reminders.push({time: "12:00", msg: "Task Reminder", fired: false}); renderReminderUI(); }
+
     function syncUI() {
         document.getElementById('check-mood').checked = state.showMood; document.getElementById('check-reading').checked = state.showReading; document.getElementById('check-travel').checked = state.showTravel; document.getElementById('check-proj').checked = state.showProj; document.getElementById('check-debt').checked = state.allowDebt;
         document.getElementById('color-bg').value = state.theme.bg; document.getElementById('color-paper').value = state.theme.paper; document.getElementById('color-text').value = state.theme.text; document.getElementById('color-header').value = state.theme["header-text"]; document.getElementById('color-accent').value = state.theme.accent; document.getElementById('color-btn-text').value = state.theme["btn-text"]; document.getElementById('font-size-input').value = parseInt(state.theme["base-size"]); document.getElementById('name-input').value = state.name; document.getElementById('brand-input').value = state.brandName;
+        document.getElementById('sleep-input').value = state.sleepTime; document.getElementById('remind-input').value = state.remindTime;
     }
     function updateTheme(p, v) { state.theme[p] = v; applyTheme(); save(); }
     function applyTheme() { const r = document.documentElement.style; Object.keys(state.theme).forEach(k => r.setProperty('--'+k, state.theme[k])); }
