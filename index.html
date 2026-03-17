@@ -83,6 +83,38 @@
         
         .planner-grid-header { display: grid; grid-template-columns: 2fr 1fr 1fr 40px; gap: 10px; font-size: 0.55rem; font-weight: bold; color: var(--accent); text-transform: uppercase; margin-bottom: 5px; padding: 0 5px; }
         .planner-row { display: grid; grid-template-columns: 2fr 1fr 1fr 40px; gap: 10px; margin-bottom: 8px; }
+
+        /* MOBILE RESPONSIVENESS FIX */
+        @media (max-width: 768px) {
+            body { flex-direction: column; overflow-y: auto; height: auto; }
+            nav { 
+                width: 100%; 
+                height: auto; 
+                flex-direction: row; 
+                padding: 15px; 
+                overflow-x: auto; 
+                overflow-y: hidden;
+                white-space: nowrap; 
+                border-right: none; 
+                border-bottom: 1px solid var(--line); 
+                position: sticky; 
+                top: 0; 
+                z-index: 1000;
+                gap: 20px;
+                align-items: center;
+                -webkit-overflow-scrolling: touch;
+            }
+            .nav-brand { margin-bottom: 0; padding-right: 15px; border-right: 1px solid var(--line); flex-shrink: 0; font-size: 1.1rem; }
+            .nav-link { margin-bottom: 0; display: inline-block; flex-shrink: 0; padding: 5px 0; border-left: none !important; }
+            .nav-link.active { border-bottom: 2px solid var(--accent); padding-left: 0; }
+            .main-content { padding: 20px 15px; overflow-y: visible; }
+            .container { max-width: 100%; padding-bottom: 60px; }
+            .balance { font-size: 2.8rem; }
+            .snapshot-hide { display: none !important; } /* Hides extra buttons from top nav on mobile */
+            .theme-grid { grid-template-columns: 1fr; } /* Stack theme settings on mobile */
+            .config-header-row { display: none; } /* Hide complex headers on mobile settings */
+            .settings-row { grid-template-columns: 1fr 1fr !important; } /* Simplify rows for mobile */
+        }
     </style>
 </head>
 <body>
@@ -124,6 +156,23 @@
             </header>
             <section id="dash-mood" style="display:none;"><h2>Today's Mood</h2><div class="mood-box" id="mood-display"></div></section>
             
+            <section id="dash-hydration">
+                <h2>Hydration</h2>
+                <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <b style="font-size:1.1rem;">Bottle Count</b><br>
+                        <small style="color:var(--rose); font-weight:bold;">Sliding tax active</small>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <span style="font-size:1.5rem; font-weight:600;" id="display-water">0</span>
+                        <div style="display:flex; gap:5px;">
+                            <button class="btn-check" onclick="addWater(-1)">-</button>
+                            <button class="btn-check" onclick="addWater(1)">+</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section>
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap: wrap; gap:10px;">
                     <h2 style="margin:0;">Daily Quests</h2>
@@ -338,9 +387,6 @@
     function init() {
         state.syllabus = state.syllabus || [];
         state.journalMode = state.journalMode || 'reward';
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').then(() => console.log("Equinox PWA Active"));
-        }
         const todayKey = new Date().toDateString();
         if (localStorage.getItem('lastResetKey') !== todayKey) resetDayLogic(todayKey);
         document.getElementById('display-date').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
@@ -360,15 +406,16 @@
     function resolveSleep(s) { if(s && state.journalMode === 'reward') state.balance += 50; finalizeReset(new Date().toDateString()); closeModal(); }
 
     function finalizeReset(today) {
-        let earned = 0, pTime = 0;
+        let earned = 0;
         const currentNotes = document.getElementById('input-notes').value;
-        state.currentTasks.forEach(t => { if (t.isDone && t.isCreditable) { earned += t.reward; pTime += (t.hours || 0); } else if (!t.isDone && t.isTaxable) state.balance -= t.tax; });
-        state.history.unshift({ date: localStorage.getItem('lastResetKey'), earned, spent: (state.dailySpent || 0), balance: state.balance, pTime, mood: state.currentMood, notes: currentNotes });
+        state.currentTasks.forEach(t => { if (t.isDone && t.isCreditable) { earned += t.reward; } else if (!t.isDone && t.isTaxable) state.balance -= t.tax; });
+        state.history.unshift({ date: localStorage.getItem('lastResetKey'), earned, spent: (state.dailySpent || 0), balance: state.balance, mood: state.currentMood, notes: currentNotes });
         state.currentTasks = state.goals.map(g => ({...g, isDone: false}));
         manualSyncWeekly();
-        state.dailySpent = 0; state.currentMood = null; document.getElementById('input-notes').value = '';
+        state.dailySpent = 0; state.currentMood = null; state.waterDrank = 0;
+        document.getElementById('input-notes').value = '';
         state.notifiedJournal = false; state.reminders.forEach(r => r.fired = false);
-        localStorage.setItem('lastResetKey', today); save(); render(); renderThoughtLog();
+        localStorage.setItem('lastResetKey', today); save(); render();
     }
 
     function manualSyncWeekly() {
@@ -377,14 +424,7 @@
             state.weeklyPlan[dName].forEach(q => {
                 const questTitle = "Quest: " + q.title;
                 if (!state.currentTasks.some(t => t.title === questTitle)) {
-                    state.currentTasks.push({ 
-                        title: questTitle, 
-                        reward: q.reward || 50, 
-                        tax: q.tax || 20, 
-                        isCreditable: true, 
-                        isTaxable: true, 
-                        isDone: false 
-                    });
+                    state.currentTasks.push({ title: questTitle, reward: q.reward || 50, tax: q.tax || 20, isCreditable: true, isTaxable: true, isDone: false });
                 }
             });
         }
@@ -392,12 +432,13 @@
     }
 
     function manualSyncGlobal() {
-        state.goals.forEach(g => {
-            if (!state.currentTasks.some(t => t.title === g.title)) {
-                state.currentTasks.push({ ...g, isDone: false });
-            }
-        });
+        state.goals.forEach(g => { if (!state.currentTasks.some(t => t.title === g.title)) { state.currentTasks.push({ ...g, isDone: false }); } });
         render(); save();
+    }
+
+    function addWater(v) {
+        state.waterDrank = Math.max(0, state.waterDrank + v);
+        save(); render();
     }
 
     function addSyllabusSubject() {
@@ -435,36 +476,18 @@
         `).join('');
     }
 
-    function addMood() {
-        state.moods.push({e: "😶", l: "Neutral"});
-        save(); renderMoodConfig(); render();
-    }
+    function addMood() { state.moods.push({e: "😶", l: "Neutral"}); save(); renderMoodConfig(); render(); }
 
     function renderSyllabusProgress() {
         const container = document.getElementById('syllabus-container');
         if (!container) return;
         container.innerHTML = state.syllabus.map((s, i) => {
             const perc = Math.min((s.completed / s.total) * 100, 100);
-            return `
-                <div class="card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span class="stat-label">${s.name}</span>
-                        <span style="font-size:0.7rem; font-weight:bold;">${s.completed} / ${s.total} Ch.</span>
-                    </div>
-                    <div class="goal-bar-bg"><div class="goal-bar-fill" style="width:${perc}%"></div></div>
-                    <div style="display:flex; gap:5px; margin-top:10px;">
-                        <button class="btn-primary" style="margin:0; padding:5px; font-size:0.5rem; background:var(--line); color:var(--text);" onclick="adjustSubj(${i}, -1)">-1</button>
-                        <button class="btn-primary" style="margin:0; padding:5px; font-size:0.5rem; background:var(--line); color:var(--text);" onclick="adjustSubj(${i}, 1)">+1</button>
-                    </div>
-                </div>
-            `;
+            return `<div class="card"><div style="display:flex; justify-content:space-between; align-items:center;"><span class="stat-label">${s.name}</span><span style="font-size:0.7rem; font-weight:bold;">${s.completed} / ${s.total} Ch.</span></div><div class="goal-bar-bg"><div class="goal-bar-fill" style="width:${perc}%"></div></div><div style="display:flex; gap:5px; margin-top:10px;"><button class="btn-primary" style="margin:0; padding:5px; font-size:0.5rem; background:var(--line); color:var(--text);" onclick="adjustSubj(${i}, -1)">-1</button><button class="btn-primary" style="margin:0; padding:5px; font-size:0.5rem; background:var(--line); color:var(--text);" onclick="adjustSubj(${i}, 1)">+1</button></div></div>`;
         }).join('');
     }
 
-    function adjustSubj(i, v) {
-        state.syllabus[i].completed = Math.max(0, Math.min(state.syllabus[i].total, state.syllabus[i].completed + v));
-        save(); render();
-    }
+    function adjustSubj(i, v) { state.syllabus[i].completed = Math.max(0, Math.min(state.syllabus[i].total, state.syllabus[i].completed + v)); save(); render(); }
 
     function startTimerEngine() {
         setInterval(() => {
@@ -483,14 +506,7 @@
         }, 10000);
     }
 
-    function restoreDebt() {
-        if (state.balance < 0) {
-            state.balance = 0;
-            state.history.forEach(h => { if(h.balance < 0) h.balance = 0; });
-            save(); render();
-            alert("Balance restored.");
-        }
-    }
+    function restoreDebt() { if (state.balance < 0) { state.balance = 0; state.history.forEach(h => { if(h.balance < 0) h.balance = 0; }); save(); render(); alert("Balance restored."); } }
 
     function renderFinance() {
         if (state.journalMode === 'simple') return;
@@ -515,27 +531,14 @@
             Object.keys(state.theme).forEach(k => r.setProperty('--'+k, state.theme[k]));
         }
         document.body.classList.toggle('dark-mode', state.isDarkMode);
-        
-        // Update input values in config view to match applied theme
-        if (document.getElementById('color-bg')) {
-            document.getElementById('color-bg').value = state.theme.bg;
-            document.getElementById('color-paper').value = state.theme.paper;
-            document.getElementById('color-text').value = state.theme.text;
-            document.getElementById('color-accent').value = state.theme.accent;
-        }
     }
 
     function applyThemePreset(presetName) {
         const selectedTheme = themeLibrary[presetName];
         if (selectedTheme) {
-            state.theme.bg = selectedTheme.bg;
-            state.theme.paper = selectedTheme.paper;
-            state.theme.text = selectedTheme.text;
-            state.theme.accent = selectedTheme.accent;
-            state.theme["header-text"] = selectedTheme.text;
-            applyTheme();
-            save();
-            render();
+            state.theme.bg = selectedTheme.bg; state.theme.paper = selectedTheme.paper; state.theme.text = selectedTheme.text;
+            state.theme.accent = selectedTheme.accent; state.theme["header-text"] = selectedTheme.text;
+            applyTheme(); save(); render();
         }
     }
 
@@ -543,10 +546,8 @@
         document.getElementById('dash-mood').style.display = state.showMood ? 'block' : 'none';
         document.getElementById('side-reading').style.display = state.showReading ? 'block' : 'none';
         document.getElementById('nav-syllabus').style.display = state.showSyllabus ? 'block' : 'none';
-        document.getElementById('title-syllabus-config').style.display = state.showSyllabus ? 'block' : 'none';
-        document.getElementById('card-syllabus-config').style.display = state.showSyllabus ? 'block' : 'none';
+        document.getElementById('display-water').innerText = state.waterDrank;
         
-        // Mode Visibility Logic
         const isReward = state.journalMode === 'reward';
         document.querySelectorAll('.money-ui').forEach(el => el.style.display = isReward ? 'block' : 'none');
         document.getElementById('side-finance').style.display = isReward ? 'block' : 'none';
@@ -567,13 +568,9 @@
         
         document.getElementById('list-tasks').innerHTML = state.currentTasks.map((t, i) => `
             <div class="task-row ${t.isDone ? 'done' : ''}">
-                <div class="task-info">
-                    <b>${t.title}</b><br>
-                    <small>${isReward ? (t.isCreditable ? '+₹'+t.reward : 'Required') : ''}</small>
-                </div>
+                <div class="task-info"><b>${t.title}</b><br><small>${isReward ? (t.isCreditable ? '+₹'+t.reward : 'Required') : ''}</small></div>
                 <button class="btn-check" onclick="completeTask(${i})">✔</button>
-            </div>
-        `).join('');
+            </div>`).join('');
         
         if (isReward) renderFinance();
         if (state.showSyllabus) renderSyllabusProgress();
@@ -584,38 +581,18 @@
         document.getElementById('thought-log-container').innerHTML = entries.length > 0 ? entries.map(h => `<div class="thought-entry"><div class="thought-date">${h.date}</div><div>"${h.notes}"</div></div>`).join('') : '<p>Vault is empty.</p>';
     }
 
-    function syncUI() {
-        document.getElementById('check-mood').checked = state.showMood; 
-        document.getElementById('name-input').value = state.name;
-        document.getElementById('check-syllabus').checked = state.showSyllabus;
-        document.getElementById('mode-select').value = state.journalMode;
-    }
+    function syncUI() { document.getElementById('check-mood').checked = state.showMood; document.getElementById('name-input').value = state.name; document.getElementById('check-syllabus').checked = state.showSyllabus; document.getElementById('mode-select').value = state.journalMode; }
     function updateTheme(p, v) { state.theme[p] = v; applyTheme(); save(); }
     
     function renderPlan() { 
         document.getElementById('planner-container').innerHTML = daysArr.map(d => `
-            <div class="day-block">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <b style="letter-spacing:1px;">${d.toUpperCase()}</b>
-                    <button class="btn-primary" style="margin:0; padding:5px 12px; font-size:0.6rem; background:var(--line); color:var(--text); border:1px solid var(--accent);" onclick="addPlanRow('${d}')">+ ADD QUEST</button>
-                </div>
-                <div class="planner-grid-header"><span>Quest Title</span><span>Reward</span><span>Penalty</span><span></span></div>
-                <div id="plan-rows-${d}">${state.weeklyPlan[d].map((q, idx) => `
-                    <div class="planner-row">
-                        <input type="text" value="${q.title || ''}" placeholder="Goal..." onchange="state.weeklyPlan['${d}'][${idx}].title=this.value; save();">
-                        <input type="number" value="${q.reward || 50}" onchange="state.weeklyPlan['${d}'][${idx}].reward=parseInt(this.value); save();">
-                        <input type="number" value="${q.tax || 20}" onchange="state.weeklyPlan['${d}'][${idx}].tax=parseInt(this.value); save();">
-                        <button onclick="state.weeklyPlan['${d}'].splice(${idx},1); renderPlan(); save();" style="border:none; background:none; color:var(--rose); font-size:1.2rem;">×</button>
-                    </div>`).join('')}
-                </div>
-            </div>`).join(''); 
+            <div class="day-block"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;"><b style="letter-spacing:1px;">${d.toUpperCase()}</b><button class="btn-primary" style="margin:0; padding:5px 12px; font-size:0.6rem; background:var(--line); color:var(--text); border:1px solid var(--accent);" onclick="addPlanRow('${d}')">+ ADD QUEST</button></div>
+            <div class="planner-grid-header"><span>Quest Title</span><span>Reward</span><span>Penalty</span><span></span></div>
+            <div id="plan-rows-${d}">${state.weeklyPlan[d].map((q, idx) => `
+                <div class="planner-row"><input type="text" value="${q.title || ''}" onchange="state.weeklyPlan['${d}'][${idx}].title=this.value; save();"><input type="number" value="${q.reward || 50}" onchange="state.weeklyPlan['${d}'][${idx}].reward=parseInt(this.value); save();"><input type="number" value="${q.tax || 20}" onchange="state.weeklyPlan['${d}'][${idx}].tax=parseInt(this.value); save();"><button onclick="state.weeklyPlan['${d}'].splice(${idx},1); renderPlan(); save();" style="border:none; background:none; color:var(--rose); font-size:1.2rem;">×</button></div>`).join('')}</div></div>`).join(''); 
     }
     
-    function addPlanRow(d) { 
-        state.weeklyPlan[d].push({title: "", reward: 50, tax: 20}); 
-        renderPlan(); 
-    }
-
+    function addPlanRow(d) { state.weeklyPlan[d].push({title: "", reward: 50, tax: 20}); renderPlan(); }
     function savePlan() { save(); alert("Plan Saved."); showView('today'); }
     function renderConfig() { 
         const header = '<div class="config-header-row"><span>TASK</span><span>REWARD</span><span>PENALTY</span><span>CRED?</span><span>TAX?</span><span></span></div>';
@@ -629,18 +606,11 @@
     function completeTask(i) { 
         if(!state.currentTasks[i].isDone) { 
             if(state.journalMode === 'reward' && state.currentTasks[i].isCreditable) state.balance += state.currentTasks[i].reward; 
-            
             if(state.showSyllabus && state.syllabus.length > 0) {
                 const titleLower = state.currentTasks[i].title.toLowerCase();
-                state.syllabus.forEach(subj => {
-                    if(titleLower.includes(subj.name.toLowerCase())) {
-                        subj.completed = Math.min(subj.total, subj.completed + 1);
-                    }
-                });
+                state.syllabus.forEach(subj => { if(titleLower.includes(subj.name.toLowerCase())) { subj.completed = Math.min(subj.total, subj.completed + 1); } });
             }
-
-            state.currentTasks[i].isDone = true; 
-            save(); render(); 
+            state.currentTasks[i].isDone = true; save(); render(); 
         } 
     }
 
@@ -651,9 +621,7 @@
     function addBlankTask() { state.goals.push({title: "Habit", reward: 10, tax: 5, isCreditable: true, isTaxable: true}); renderConfig(); }
     function showModal(h) { document.getElementById('modal-content').innerHTML = h; document.getElementById('modal-overlay').style.display = 'flex'; }
     function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
-    function renderReminderUI() {
-        document.getElementById('reminders-list-ui').innerHTML = state.reminders.map((r, i) => `<div style="display:flex; gap:10px; margin-bottom:5px;"><input type="time" value="${r.time}" onchange="state.reminders[${i}].time=this.value; save();"><input type="text" value="${r.msg}" onchange="state.reminders[${i}].msg=this.value; save();"><button onclick="state.reminders.splice(${i},1); renderReminderUI(); save();">×</button></div>`).join('');
-    }
+    function renderReminderUI() { document.getElementById('reminders-list-ui').innerHTML = state.reminders.map((r, i) => `<div style="display:flex; gap:10px; margin-bottom:5px;"><input type="time" value="${r.time}" onchange="state.reminders[${i}].time=this.value; save();"><input type="text" value="${r.msg}" onchange="state.reminders[${i}].msg=this.value; save();"><button onclick="state.reminders.splice(${i},1); renderReminderUI(); save();">×</button></div>`).join(''); }
     function addReminderRow() { state.reminders.push({time: "12:00", msg: "Task Reminder", fired: false}); renderReminderUI(); }
     function addBook() { const t = document.getElementById('book-title').value; if(t) {state.readingList.push({title:t}); document.getElementById('book-title').value=''; save(); renderReading();}}
     function renderReading() { document.getElementById('book-list').innerHTML = state.readingList.map((b,i) => `<div class="card" style="display:flex; justify-content:space-between;"><span>${b.title}</span><small style="color:var(--rose); cursor:pointer;" onclick="state.readingList.splice(${i},1); save(); renderReading();">Delete</small></div>`).join(''); }
