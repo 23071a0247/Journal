@@ -247,7 +247,7 @@
                     <h3>4. The Remainders</h3>
                     <p>Time management is handled via the in Settings:</p>
                     <ul>
-                        <li><b>Sleep Target</b>: If you wake up and confirm you met your sleep target, you earn a flat bonus (₹50 in reward mode).</li>
+                        <li><b>Sleep Target</b>: If you wake up and confirm you met your sleep target, you earn a custom bonus. This feature can be toggled in settings.</li>
                         <li><b>Journal Alert</b>: A system-wide modal that reminds you to log your thoughts at your preferred reflection time.</li>
                         <li><b>Custom Reminders</b>: Set specific times for "Daily Quests" to trigger a popup alert.</li>
                     </ul>
@@ -307,7 +307,9 @@
                     <div><label style="font-size:0.6rem; font-weight:600;">SLEEP TARGET</label><input type="time" id="sleep-input" onchange="state.sleepTime=this.value; save();"></div>
                     <div><label style="font-size:0.6rem; font-weight:600;">JOURNAL ALERT</label><input type="time" id="remind-input" onchange="state.remindTime=this.value; save();"></div>
                 </div>
-                <div id="reminders-list-ui"></div>
+                <div class="toggle-card"><span>Sleep Discipline Credit</span><input type="checkbox" id="check-sleep-credit" onchange="state.allowSleepCredit=this.checked; save();"></div>
+                <div style="margin-top:10px;"><label style="font-size:0.6rem; font-weight:600;">SLEEP REWARD (₹)</label><input type="number" id="sleep-reward-input" onchange="state.sleepReward=parseInt(this.value); save();"></div>
+                <div id="reminders-list-ui" style="margin-top:20px;"></div>
                 <button class="btn-primary" style="background:#EEE; color:#666;" onclick="addReminderRow()">+ Add Task Reminder</button>
             </div>
 
@@ -376,6 +378,7 @@
     let state = JSON.parse(localStorage.getItem('equinoxChronosData')) || {
         brandName: "The Equinox", name: "Traveler", balance: 0, isDarkMode: false, journalMode: 'reward',
         showMood: true, showReading: true, showTravel: false, showProj: false, allowDebt: true, showSyllabus: false,
+        allowSleepCredit: true, sleepReward: 50,
         sleepTime: "23:00", remindTime: "22:00", reminders: [], notifiedJournal: false,
         theme: { accent: "#A7B49E", bg: "#FAF9F6", paper: "#FFFFFF", text: "#4A4947", "header-text": "#4A4947", "btn-text": "#FFFFFF", "base-size": "16px", "font-head": "'Libre Baskerville', serif" },
         moods: [{e: "🌿", l: "Calm"}, {e: "✨", l: "Glow"}, {e: "☁️", l: "Low"}, {e: "😤", l: "Upset"}, {e: "😔", l: "Sad"}],
@@ -385,6 +388,8 @@
     let myChart = null;
 
     function init() {
+        if (state.allowSleepCredit === undefined) state.allowSleepCredit = true;
+        if (state.sleepReward === undefined) state.sleepReward = 50;
         state.syllabus = state.syllabus || [];
         state.journalMode = state.journalMode || 'reward';
         const todayKey = new Date().toDateString();
@@ -400,10 +405,14 @@
 
     function resetDayLogic(today) {
         if (localStorage.getItem('lastResetKey')) {
-            showModal(`<h2>Morning Check</h2><p>Did you sleep by target?</p><button class="btn-primary" onclick="resolveSleep(true)">Yes (₹50)</button><button class="btn-primary" style="background:#EEE; color:#666; margin-top:10px;" onclick="resolveSleep(false)">No</button>`);
+            if (state.allowSleepCredit) {
+                showModal(`<h2>Morning Check</h2><p>Did you sleep by target?</p><button class="btn-primary" onclick="resolveSleep(true)">Yes (₹${state.sleepReward || 50})</button><button class="btn-primary" style="background:#EEE; color:#666; margin-top:10px;" onclick="resolveSleep(false)">No</button>`);
+            } else {
+                finalizeReset(today);
+            }
         } else finalizeReset(today);
     }
-    function resolveSleep(s) { if(s && state.journalMode === 'reward') state.balance += 50; finalizeReset(new Date().toDateString()); closeModal(); }
+    function resolveSleep(s) { if(s && state.journalMode === 'reward') state.balance += (state.sleepReward || 50); finalizeReset(new Date().toDateString()); closeModal(); }
 
     function finalizeReset(today) {
         let earned = 0;
@@ -436,10 +445,7 @@
         render(); save();
     }
 
-    function addWater(v) {
-        state.waterDrank = Math.max(0, state.waterDrank + v);
-        save(); render();
-    }
+    function addWater(v) { state.waterDrank = Math.max(0, state.waterDrank + v); save(); render(); }
 
     function addSyllabusSubject() {
         const name = document.getElementById('new-subj-name').value;
@@ -581,7 +587,14 @@
         document.getElementById('thought-log-container').innerHTML = entries.length > 0 ? entries.map(h => `<div class="thought-entry"><div class="thought-date">${h.date}</div><div>"${h.notes}"</div></div>`).join('') : '<p>Vault is empty.</p>';
     }
 
-    function syncUI() { document.getElementById('check-mood').checked = state.showMood; document.getElementById('name-input').value = state.name; document.getElementById('check-syllabus').checked = state.showSyllabus; document.getElementById('mode-select').value = state.journalMode; }
+    function syncUI() { 
+        document.getElementById('check-mood').checked = state.showMood; 
+        document.getElementById('name-input').value = state.name; 
+        document.getElementById('check-syllabus').checked = state.showSyllabus; 
+        document.getElementById('mode-select').value = state.journalMode; 
+        document.getElementById('check-sleep-credit').checked = state.allowSleepCredit;
+        document.getElementById('sleep-reward-input').value = state.sleepReward;
+    }
     function updateTheme(p, v) { state.theme[p] = v; applyTheme(); save(); }
     
     function renderPlan() { 
