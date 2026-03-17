@@ -12,177 +12,200 @@
         :root { 
             --bg: #FAF9F6; --text: #4A4947; --header-text: #4A4947; --accent: #A7B49E; 
             --btn-text: #FFFFFF; --rose: #D9C5C5; --line: #E8E6E1; --paper: #FFFFFF; 
-            --sidebar-width: 240px; --font-main: 'Montserrat', sans-serif; 
+            --sidebar-width: 220px; --font-main: 'Montserrat', sans-serif; 
             --font-head: 'Libre Baskerville', serif; --base-size: 16px;
         }
     </style>
     <style>
-        body.dark-mode { --bg: #121212 !important; --text: #E0E0E0 !important; --header-text: #FFFFFF !important; --paper: #1E1E1E !important; --line: #333333 !important; }
-        body { background-color: var(--bg); color: var(--text); font-family: var(--font-main); font-size: var(--base-size); margin: 0; display: flex; height: 100vh; overflow: hidden; transition: 0.3s; }
-        
-        /* NAVIGATION STYLES */
-        nav { width: var(--sidebar-width); background: var(--paper); border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: 40px 30px; box-sizing: border-box; flex-shrink: 0; overflow-y: auto; transition: 0.3s; }
-        .nav-brand { font-family: var(--font-head); font-size: 1.4rem; margin-bottom: 40px; color: var(--accent); font-style: italic; font-weight: 700; }
-        .nav-link { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; color: #888; margin-bottom: 22px; transition: 0.3s; display: block; text-decoration: none; font-weight: 500; }
-        .nav-link.active { color: var(--text); font-weight: 700; border-left: 3px solid var(--accent); padding-left: 15px; }
-
-        .main-content { flex-grow: 1; padding: 60px 40px; overflow-y: auto; display: flex; justify-content: center; scroll-behavior: smooth; }
-        .container { width: 100%; max-width: 650px; padding-bottom: 120px; }
-        
-        h2 { color: var(--header-text); font-family: var(--font-head); margin-top: 0; font-size: 1.2rem; font-style: italic; margin-bottom: 20px; border-bottom: 1px solid var(--line); padding-bottom: 10px; }
-        .balance { font-size: 4rem; font-weight: 300; letter-spacing: -3px; color: var(--header-text); margin: 10px 0; }
-        .balance.in-debt { color: var(--rose); }
-        .debt-stats { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: #888; display: flex; gap: 15px; margin-bottom: 20px; font-weight: 600; }
-        
-        .card { background: var(--paper); border: 1px solid var(--line); padding: 24px; border-radius: 16px; margin-bottom: 25px; transition: 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
-        .view { display: none; } .view.active { display: block; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; } }
-
-        .mood-box { display: flex; gap: 18px; margin-bottom: 10px; flex-wrap: wrap; }
-        .mood-btn { font-size: 1.6rem; cursor: pointer; opacity: 0.25; filter: grayscale(1); transition: 0.4s; }
-        .mood-btn.selected { opacity: 1; filter: grayscale(0); transform: scale(1.25); }
-
-        .task-row { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--line); gap: 15px; }
-        .task-row.done { opacity: 0.4; filter: grayscale(0.5); }
-        .btn-check { background: none; border: 1px solid var(--line); border-radius: 50%; width: 32px; height: 32px; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; transition: 0.3s; color: var(--accent); }
-        .task-row.done .btn-check { background: var(--accent); color: var(--btn-text); border-color: var(--accent); }
-
-        input, select, textarea { background: var(--paper); border: 1px solid var(--line); padding: 12px; border-radius: 10px; font-family: var(--font-main); color: var(--text); width: 100%; box-sizing: border-box; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--accent); }
-        .btn-primary { background: var(--accent); color: var(--btn-text); border: none; padding: 14px 20px; border-radius: 10px; cursor: pointer; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; transition: 0.3s; }
-        
-        .edit-controls { display: none; margin-top: 20px; animation: fadeIn 0.3s ease; }
-        .edit-active .edit-controls { display: block; }
-        .zen-toggle { position: absolute; top: 20px; right: 20px; font-size: 0.6rem; letter-spacing: 1px; opacity: 0.6; cursor: pointer; padding: 5px 10px; border: 1px solid var(--line); border-radius: 20px; }
-
-        /* MOBILE OPTIMIZATION */
-        @media (max-width: 768px) {
-            body { flex-direction: column; overflow: hidden; height: 100vh; }
-            nav { 
-                width: 100%; 
-                height: 70px; 
-                flex-direction: row; 
-                padding: 0 15px; 
-                border-right: none; 
-                border-top: 1px solid var(--line); 
-                position: fixed; 
-                bottom: 0; 
-                top: auto;
-                z-index: 1000;
-                justify-content: space-around;
-                align-items: center;
-                overflow: hidden;
-            }
-            .nav-brand { display: none; }
-            .nav-link { margin-bottom: 0; font-size: 0.5rem; text-align: center; border: none !important; padding: 0 !important; }
-            .nav-link.active { color: var(--accent); }
-            .main-content { padding: 30px 20px 100px 20px; height: 100vh; overflow-y: auto; }
-            .container { padding-bottom: 120px; }
-            .balance { font-size: 3.2rem; text-align: center; }
-            .debt-stats { justify-content: center; }
-            header { text-align: center; }
-            .snapshot-hide { display: none; }
+        /* FIXED DARK MODE OVERRIDES */
+        body.dark-mode { 
+            --bg: #121212 !important; 
+            --text: #E0E0E0 !important; 
+            --header-text: #FFFFFF !important; 
+            --paper: #1E1E1E !important; 
+            --line: #333333 !important; 
         }
+        body { background-color: var(--bg); color: var(--text); font-family: var(--font-main); font-size: var(--base-size); margin: 0; display: flex; height: 100vh; overflow: hidden; transition: 0.3s; }
+        nav { width: var(--sidebar-width); background: var(--paper); border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: 40px 25px; box-sizing: border-box; flex-shrink: 0; overflow-y: auto; }
+        .nav-brand { font-family: var(--font-head); font-size: 1.4rem; margin-bottom: 40px; color: var(--accent); font-style: italic; }
+        .nav-link { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; color: #888; margin-bottom: 20px; transition: 0.3s; display: block; text-decoration: none; }
+        .nav-link.active { color: var(--text); font-weight: 600; border-left: 3px solid var(--accent); padding-left: 12px; }
+        .main-content { flex-grow: 1; padding: 60px 40px; overflow-y: auto; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 650px; padding-bottom: 100px; }
+        h2, h3 { color: var(--header-text); font-family: var(--font-head); margin-top: 0; }
+        .balance { font-size: 3.5rem; font-weight: 300; letter-spacing: -2px; color: var(--header-text); margin: 10px 0 5px 0; }
+        .balance.in-debt { color: var(--rose); }
+        .debt-stats { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: #888; display: flex; gap: 15px; margin-bottom: 15px; font-weight: 600; }
+        .debt-stats b { color: var(--rose); }
+        .goal-bar-bg { width: 100%; height: 5px; background: #33333322; border-radius: 10px; margin: 15px 0; }
+        .goal-bar-fill { height: 100%; background: var(--accent); width: 0%; transition: 1s ease; }
+        .view { display: none; } .view.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
+        .card { background: var(--paper); border: 1px solid var(--line); padding: 20px; border-radius: 12px; margin-bottom: 25px; }
+        .mood-box { display: flex; gap: 15px; margin-bottom: 10px; flex-wrap: wrap; }
+        .mood-btn { font-size: 1.5rem; cursor: pointer; opacity: 0.3; filter: grayscale(1); transition: 0.3s; }
+        .mood-btn.selected { opacity: 1; filter: grayscale(0); transform: scale(1.2); }
+        .task-row { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--line); gap: 15px; }
+        .task-info { flex-grow: 1; }
+        .task-row.done { opacity: 0.3; text-decoration: line-through; }
+        .btn-check { background: none; border: 1px solid var(--line); border-radius: 50%; width: 28px; height: 28px; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .task-row.done .btn-check { background: var(--accent); color: var(--btn-text); border-color: var(--accent); }
+        .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        input, select, textarea { background: var(--paper); border: 1px solid var(--line); padding: 10px; border-radius: 8px; font-family: var(--font-main); color: var(--text); width: 100%; box-sizing: border-box; outline: none; }
+        .btn-primary { background: var(--accent); color: var(--btn-text); border: none; padding: 14px; border-radius: 8px; cursor: pointer; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; margin-top: 10px; transition: 0.3s; }
+        .toggle-card { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--line); }
+        .day-block { margin-bottom: 30px; padding: 20px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+        
+        .finance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .stat-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); font-weight: bold; }
+        .stat-value { font-size: 1.8rem; font-family: var(--font-head); margin-top: 5px; }
 
-        /* SNAPSHOT MODE */
         body.snapshot-mode nav, 
+        body.snapshot-mode .btn-primary:not(.btn-snapshot-fixed), 
         body.snapshot-mode .btn-check, 
-        body.snapshot-mode .btn-primary:not(.btn-snapshot-fixed),
-        body.snapshot-mode .zen-toggle,
-        body.snapshot-mode .edit-controls,
         body.snapshot-mode input, 
         body.snapshot-mode textarea { display: none !important; }
-        .btn-snapshot-fixed { position: fixed; bottom: 85px; right: 20px; z-index: 3000; width: 50px; height: 50px; border-radius: 50%; display: none; background: var(--text); color: var(--bg); border: none; font-size: 1.2rem; }
+        .btn-snapshot-fixed { position: fixed; bottom: 20px; right: 20px; z-index: 3000; width: 50px !important; height: 50px; border-radius: 50% !important; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         body.snapshot-mode .btn-snapshot-fixed { display: flex; align-items: center; justify-content: center; }
+        
+        #modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.1); backdrop-filter: blur(10px); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-box { background: var(--paper); padding: 40px; border-radius: 20px; text-align: center; border: 1px solid var(--line); max-width: 380px; }
+        .thought-entry { border-left: 3px solid var(--accent); padding-left: 15px; margin-bottom: 30px; }
+        .thought-date { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 5px; font-weight: 600; }
+        .config-header-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 40px; gap: 5px; padding: 0 5px; margin-bottom: 10px; font-size: 0.55rem; font-weight: bold; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Manual Detailed Style */
+        .help-block { margin-bottom: 40px; }
+        .help-block h3 { font-size: 0.95rem; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; border-bottom: 2px solid var(--line); padding-bottom: 10px; margin-bottom: 20px; }
+        .help-block p, .help-block li { font-size: 0.85rem; line-height: 1.8; color: var(--text); margin-bottom: 10px; }
+        .help-block b { color: var(--header-text); }
+        .label-pill { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; text-transform: uppercase; margin-right: 5px; }
+        
+        .planner-grid-header { display: grid; grid-template-columns: 2fr 1fr 1fr 40px; gap: 10px; font-size: 0.55rem; font-weight: bold; color: var(--accent); text-transform: uppercase; margin-bottom: 5px; padding: 0 5px; }
+        .planner-row { display: grid; grid-template-columns: 2fr 1fr 1fr 40px; gap: 10px; margin-bottom: 8px; }
+
+        /* MOBILE RESPONSIVENESS FIX */
+        @media (max-width: 768px) {
+            body { flex-direction: column; overflow-y: auto; height: auto; }
+            nav { 
+                width: 100%; 
+                height: auto; 
+                flex-direction: row; 
+                padding: 15px; 
+                overflow-x: auto; 
+                overflow-y: hidden;
+                white-space: nowrap; 
+                border-right: none; 
+                border-bottom: 1px solid var(--line); 
+                position: sticky; 
+                top: 0; 
+                z-index: 1000;
+                gap: 20px;
+                align-items: center;
+                -webkit-overflow-scrolling: touch;
+            }
+            .nav-brand { margin-bottom: 0; padding-right: 15px; border-right: 1px solid var(--line); flex-shrink: 0; font-size: 1.1rem; }
+            .nav-link { margin-bottom: 0; display: inline-block; flex-shrink: 0; padding: 5px 0; border-left: none !important; }
+            .nav-link.active { border-bottom: 2px solid var(--accent); padding-left: 0; }
+            .main-content { padding: 20px 15px; overflow-y: visible; }
+            .container { max-width: 100%; padding-bottom: 60px; }
+            .balance { font-size: 2.8rem; }
+            .snapshot-hide { display: none !important; } /* Hides extra buttons from top nav on mobile */
+            .theme-grid { grid-template-columns: 1fr; } /* Stack theme settings on mobile */
+            .config-header-row { display: none; } /* Hide complex headers on mobile settings */
+            .settings-row { grid-template-columns: 1fr 1fr !important; } /* Simplify rows for mobile */
+        }
     </style>
 </head>
-<body id="main-body">
+<body>
 <div id="modal-overlay"><div class="modal-box" id="modal-content"></div></div>
-<button class="btn-snapshot-fixed" onclick="toggleSnapshot()">📸</button>
-
-<nav id="sidebar-nav">
-    <div class="nav-brand">The Equinox</div>
-    <div class="nav-link active" id="nav-today" onclick="showView('today')">Journal</div>
-    <div class="nav-link" id="nav-plan" onclick="showView('plan')">Plan</div>
-    <div id="nav-syllabus" class="nav-link" style="display:none;" onclick="showView('syllabus')">Syllabus</div>
-    <div class="nav-link" id="nav-thoughts" onclick="showView('thoughts')">Vault</div>
+<button class="btn-primary btn-snapshot-fixed" onclick="toggleSnapshot()">📸</button>
+<nav>
+    <div class="nav-brand" id="brand-display">The Equinox</div>
+    <div class="nav-link active" id="nav-today" onclick="showView('today')">Daily Journal</div>
+    <div class="nav-link" id="nav-plan" onclick="showView('plan')">Weekly Plan</div>
+    <div id="side-finance" class="nav-link" onclick="showView('finance')">Finance Journal</div>
+    <div id="nav-syllabus" class="nav-link" style="display:none;" onclick="showView('syllabus')">Syllabus Tracker</div>
+    <div class="nav-link" id="nav-thoughts" onclick="showView('thoughts')">Thought Vault</div>
+    <div id="side-reading" class="nav-link" onclick="showView('reading')">Reading Room</div>
+    <div class="nav-link" id="nav-history" onclick="showView('history')">Archives</div>
+    <div class="nav-link" id="nav-help" onclick="showView('help')">How to Use</div>
     <div class="nav-link" id="nav-config" onclick="showView('config')">Settings</div>
+    <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid var(--line);" class="snapshot-hide">
+        <button class="btn-primary" style="background: var(--line); color: var(--text); border: 1px solid var(--accent); padding: 8px;" onclick="toggleEclipse()">✨ Eclipse View</button>
+        <button class="btn-primary" style="background: var(--text); color: var(--bg); padding: 8px;" onclick="toggleSnapshot()">📸 Snapshot</button>
+    </div>
 </nav>
-
 <div class="main-content">
-    <div class="container" id="content-container">
+    <div class="container">
         <div id="view-today" class="view active">
-            <div class="zen-toggle" onclick="document.getElementById('view-today').classList.toggle('edit-active')">⚙️ EDIT VIEW</div>
             <header>
-                <div id="greeting" style="color:var(--accent); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 700;">WELCOME, TRAVELER</div>
-                <div id="display-date" style="font-family: var(--font-head); font-style: italic; font-size: 1.4rem; margin-top: 5px;"></div>
+                <div id="greeting" style="color:var(--accent); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase;">WELCOME, TRAVELER</div>
+                <div id="display-date" style="font-family: var(--font-head); font-style: italic; margin-bottom: 10px;"></div>
                 
                 <div class="money-ui">
                     <div class="balance" id="display-balance">₹0</div>
                     <div class="debt-stats">
-                        <span>Week: <b id="stat-week-debt">₹0</b></span>
-                        <span>Total: <b id="stat-total-debt">₹0</b></span>
+                        <span>Week's Debt: <b id="stat-week-debt">₹0</b></span>
+                        <span>Overall Debt: <b id="stat-total-debt">₹0</b></span>
                     </div>
+                    <button id="btn-restore" class="btn-primary" style="display:none; margin: 0 0 20px 0; background:var(--accent); padding: 8px 15px; font-size:0.6rem;" onclick="restoreDebt()">✨ Restore Balance</button>
                 </div>
+                
                 <div class="goal-bar-bg"><div class="goal-bar-fill" id="goal-bar"></div></div>
             </header>
-
-            <section id="dash-mood" style="display:none;">
-                <div class="mood-box" id="mood-display"></div>
-            </section>
+            <section id="dash-mood" style="display:none;"><h2>Today's Mood</h2><div class="mood-box" id="mood-display"></div></section>
             
             <section id="dash-hydration">
-                <div class="card" style="display:flex; justify-content:space-between; align-items:center; padding: 15px 24px;">
-                    <span style="font-size:0.8rem; font-weight:700; letter-spacing:1px;">HYDRATION</span>
+                <h2>Hydration</h2>
+                <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <b style="font-size:1.1rem;">Bottle Count</b><br>
+                        <small style="color:var(--rose); font-weight:bold;">Sliding tax active</small>
+                    </div>
                     <div style="display:flex; align-items:center; gap:15px;">
-                        <button class="btn-check" style="width:25px; height:25px;" onclick="addWater(-1)">-</button>
-                        <span style="font-size:1.2rem; font-weight:700;" id="display-water">0</span>
-                        <button class="btn-check" style="width:25px; height:25px;" onclick="addWater(1)">+</button>
+                        <span style="font-size:1.5rem; font-weight:600;" id="display-water">0</span>
+                        <div style="display:flex; gap:5px;">
+                            <button class="btn-check" onclick="addWater(-1)">-</button>
+                            <button class="btn-check" onclick="addWater(1)">+</button>
+                        </div>
                     </div>
                 </div>
             </section>
 
             <section>
-                <h2>Daily Quests</h2>
-                <div class="edit-controls" style="margin-bottom: 20px; display: flex; gap: 10px;">
-                    <button class="btn-primary" style="flex:1; padding: 8px; font-size: 0.6rem;" onclick="manualSyncGlobal()">🧬 Sync Habits</button>
-                    <button class="btn-primary" style="flex:1; padding: 8px; font-size: 0.6rem;" onclick="manualSyncWeekly()">🔄 Sync Weekly</button>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap: wrap; gap:10px;">
+                    <h2 style="margin:0;">Daily Quests</h2>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-primary" style="margin:0; padding:5px 10px; font-size:0.55rem; background:var(--line); color:var(--text); border:1px solid var(--accent);" onclick="manualSyncGlobal()">🧬 Sync Habits</button>
+                        <button class="btn-primary" style="margin:0; padding:5px 10px; font-size:0.55rem; background:var(--line); color:var(--text); border:1px solid var(--accent);" onclick="manualSyncWeekly()">🔄 Sync Weekly</button>
+                    </div>
                 </div>
                 <div id="list-tasks"></div>
             </section>
             
-            <section class="money-ui edit-controls">
-                <div class="card" style="padding:15px;">
-                    <div style="display:flex; gap:10px;">
-                        <input type="number" id="spend-amt" placeholder="Amount ₹">
-                        <button class="btn-primary" style="background:var(--rose);" onclick="spendMoney()">Spend</button>
-                    </div>
-                </div>
-            </section>
-
-            <section>
-                <textarea id="input-notes" placeholder="Write a reflection..." style="border:none; border-left: 2px solid var(--line); border-radius: 0; height: 100px; font-style: italic;"></textarea>
-            </section>
+            <section class="snapshot-hide money-ui"><h2>Wallet</h2><div style="display:flex; gap:10px;"><input type="number" id="spend-amt" placeholder="Amount ₹"><button class="btn-primary" style="margin:0; background:var(--rose); width:120px;" onclick="spendMoney()">Spend</button></div></section>
+            <section><h2>Reflections</h2><textarea id="input-notes" placeholder="Write a thought..."></textarea></section>
         </div>
 
         <div id="view-finance" class="view">
             <h2>Finance Journal 💸</h2>
             <div class="finance-grid">
-                <div class="card"><div class="stat-label">Week Earned</div><div class="stat-value" id="f-week-earn">₹0</div></div>
-                <div class="card"><div class="stat-label">Week Spent</div><div class="stat-value" id="f-week-spent" style="color:var(--rose)">₹0</div></div>
+                <div class="card"><div class="stat-label">Week's Earnings</div><div class="stat-value" id="f-week-earn">₹0</div></div>
+                <div class="card"><div class="stat-label">Week's Expenditure</div><div class="stat-value" id="f-week-spent" style="color:var(--rose)">₹0</div></div>
             </div>
             <div class="card">
-                <div class="stat-label">Progress to Goal</div>
-                <div class="balance" id="f-goal-text" style="font-size: 1.5rem;">₹0 / ₹2000</div>
-                <div class="goal-bar-bg" style="height:12px;"><div class="goal-bar-fill" id="f-goal-bar"></div></div>
+                <div class="stat-label">Weekly Progress to Goal</div>
+                <div class="balance" id="f-goal-text" style="font-size: 1.5rem; margin-top:10px;">₹0 / ₹2000</div>
+                <div class="goal-bar-bg" style="height:15px;"><div class="goal-bar-fill" id="f-goal-bar" style="height:100%"></div></div>
                 <p id="f-gap-text" style="font-size:0.7rem; color:#888; font-weight:600; margin-top:10px;"></p>
             </div>
         </div>
 
         <div id="view-syllabus" class="view">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <h2 style="margin:0; border:none;">Progress Tracker 📚</h2>
-                <button class="btn-primary" style="padding:5px 12px; font-size:0.55rem;" onclick="renderSyllabusProgress()">🔄 Sync</button>
+                <h2 style="margin:0;">Syllabus Progress 📚</h2>
+                <button class="btn-primary" style="margin:0; padding:5px 10px; font-size:0.55rem; background:var(--line); color:var(--text); border:1px solid var(--accent);" onclick="renderSyllabusProgress()">🔄 Sync Progress</button>
             </div>
             <div id="syllabus-container"></div>
         </div>
@@ -192,113 +215,212 @@
             <div id="thought-log-container"></div>
         </div>
 
+        <div id="view-help" class="view">
+            <h2>Equinox Operative Manual 📖</h2>
+            <div class="card help-content">
+                <div class="help-block">
+                    <h3>1. Core Architecture</h3>
+                    <p>The Equinox is a <b>Personal OS</b> designed to bridge the gap between productivity and self-reflection. It operates on two distinct logical frameworks:</p>
+                    <ul>
+                        <li><b>Reward-Based Economy</b>: Your discipline has a literal value. Completing tasks earns "Currency" (₹), while failing taxable habits deducts it. This turns your day into a balanced budget.</li>
+                        <li><b>Simple Journal</b>: Removes all fiscal elements (Wallet/Finance) for those who prefer a minimalist, purely task-focused experience.</li>
+                    </ul>
+                </div>
+
+                <div class="help-block">
+                    <h3>2. The Task Ecosystem</h3>
+                    <p>There are three ways tasks enter your dashboard:</p>
+                    <ul>
+                        <li><b>The Daily Goals (Settings)</b>: These are your recurring habits (e.g., "Drink Water", "Workout"). They reset every morning automatically.</li>
+                        <li><b>Weekly Plan</b>: Specific quests scheduled for certain days. Unlike habits, these are usually one-off goals for that specific week.</li>
+                        <li><b>Manual Injection</b>: Use the <b>Sync Habits</b> or <b>Sync Weekly</b> buttons on the dashboard to pull tasks into your day if you missed the midnight transition.</li>
+                    </ul>
+                </div>
+
+                <div class="help-block">
+                    <h3>3. Syllabus Intelligence 🧠</h3>
+                    <p>A specialized module for students or researchers. You define a <b>Subject Name</b> and the <b>Total Chapters</b> in Settings. 
+                    The OS uses <b>Pattern Recognition</b>: if you complete a task that contains the subject's name (e.g., "Study Physics 101" for a Physics subject), the system automatically increments your progress bar.</p>
+                </div>
+
+                <div class="help-block">
+                    <h3>4. The Remainders</h3>
+                    <p>Time management is handled via the in Settings:</p>
+                    <ul>
+                        <li><b>Sleep Target</b>: If you wake up and confirm you met your sleep target, you earn a flat bonus. This reward amount and logic can be customized in settings.</li>
+                        <li><b>Journal Alert</b>: A system-wide modal that reminds you to log your thoughts at your preferred reflection time.</li>
+                        <li><b>Custom Reminders</b>: Set specific times for "Daily Quests" to trigger a popup alert.</li>
+                    </ul>
+                </div>
+
+                <div class="help-block">
+                    <h3>5. Privacy & Presence</h3>
+                    <p><b>Snapshot Mode (📸)</b>: Click the camera icon or button to hide all interactive elements (inputs, buttons, nav). This is designed for capturing a beautiful "clean view" of your progress or for focusing on reading without distraction. Click again to return.</p>
+                    <p><b>Eclipse View (✨)</b>: Instantly toggles between Light and Dark mode. Dark mode is optimized for nighttime reflection.</p>
+                </div>
+
+                <div class="help-block">
+                    <h3>6. Data Sovereignty</h3>
+                    <p>The Equinox saves data locally to your browser's <b>LocalStorage</b>. It never leaves your device. We recommend using the <b>💾 Export</b> button in Settings once a week to keep a physical backup of your life data.</p>
+                </div>
+            </div>
+        </div>
+
         <div id="view-config" class="view">
-            <h2>Architecture</h2>
+            <h2>Journal Type</h2>
             <div class="card">
-                <select id="mode-select" onchange="state.journalMode=this.value; save(); render();">
-                    <option value="reward">Reward-Based Economy</option>
-                    <option value="simple">Simple Journal</option>
+                <select id="mode-select" onchange="state.journalMode=this.value; save(); render();" style="margin-bottom:10px;">
+                    <option value="reward">Reward-Based (Money & Discipline Economy)</option>
+                    <option value="simple">Simple Journal (Minimalist To-Do List)</option>
                 </select>
+                <p style="font-size:0.6rem; color:#888;">Simple mode hides the wallet and finance tracking for a cleaner focus.</p>
             </div>
 
-            <h2>Visuals</h2>
+            <h2>Theme Library</h2>
             <div class="card">
                 <select id="theme-preset-select" onchange="applyThemePreset(this.value)">
-                    <option value="equinox">Classic Equinox</option>
+                    <option value="equinox">Classic Equinox (Default)</option>
                     <option value="midnight">Midnight Archive</option>
                     <option value="nord">Nordic Frost</option>
-                    <option value="cyber">Cyber Zen</option>
+                    <option value="forest">Forest Ritual</option>
                     <option value="sakura">Sakura Bloom</option>
+                    <option value="solar">Solar Flare</option>
+                    <option value="lavender">Lavender Field</option>
+                    <option value="obsidian">High-Contrast Obsidian</option>
+                    <option value="coffee">Coffee Shop</option>
+                    <option value="matcha">Matcha Latte</option>
+                    <option value="cyber">Cyber Zen</option>
+                    <option value="royal">Royal Velvet</option>
+                    <option value="oceanic">Oceanic Deep</option>
                 </select>
-                <div class="theme-grid" style="margin-top: 20px;">
-                    <div class="theme-control"><label>USER NAME</label><input type="text" id="name-input" onchange="state.name=this.value; save(); render();"></div>
-                    <div class="theme-control"><label>GOAL (₹)</label><input type="number" id="goal-input" onchange="state.weeklyGoal=parseInt(this.value); save(); renderFinance();"></div>
-                </div>
             </div>
 
-            <h2>Moods & Sleep</h2>
+            <h2>Moods</h2>
             <div class="card">
                 <div id="mood-config-list"></div>
-                <button class="btn-primary" style="width:100%; margin-top:10px;" onclick="addMood()">+ Add Mood</button>
-                <div style="margin-top: 20px; border-top: 1px solid var(--line); padding-top: 20px;">
-                    <div class="toggle-card"><span>Morning Popup</span><input type="checkbox" id="check-sleep-logic" onchange="state.enableSleepLogic=this.checked; save();"></div>
-                    <label style="font-size:0.6rem; font-weight:700;">SLEEP CREDIT (₹)</label>
-                    <input type="number" id="sleep-credit-input" onchange="state.sleepCredit=parseInt(this.value); save();">
-                </div>
+                <button class="btn-primary" style="background:#EEE; color:#666;" onclick="addMood()">+ Add Mood Emoji</button>
             </div>
 
-            <div id="card-syllabus-config" style="display:none;">
-                <h2>Syllabus Management</h2>
-                <div class="card">
-                    <div style="display:grid; grid-template-columns: 2fr 1fr 40px; gap:10px; margin-bottom:15px;">
-                        <input type="text" id="new-subj-name" placeholder="Subject">
-                        <input type="number" id="new-subj-total" placeholder="Ch.">
-                        <button class="btn-check" style="width:100%; height:42px; border-radius:8px;" onclick="addSyllabusSubject()">+</button>
-                    </div>
-                    <div id="syllabus-config-list"></div>
+            <h2>Remainders & Sleep</h2>
+            <div class="card">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:15px;">
+                    <div><label style="font-size:0.6rem; font-weight:600;">SLEEP TARGET</label><input type="time" id="sleep-input" onchange="state.sleepTime=this.value; save();"></div>
+                    <div><label style="font-size:0.6rem; font-weight:600;">JOURNAL ALERT</label><input type="time" id="remind-input" onchange="state.remindTime=this.value; save();"></div>
                 </div>
+                <div class="toggle-card"><span>Enable Sleep Reward Check</span><input type="checkbox" id="check-sleep-logic" onchange="state.enableSleepLogic=this.checked; save();"></div>
+                <div style="margin-bottom:15px;"><label style="font-size:0.6rem; font-weight:600;">SLEEP DISCIPLINE CREDIT (₹)</label><input type="number" id="sleep-credit-input" onchange="state.sleepCredit=parseInt(this.value); save();"></div>
+                <div id="reminders-list-ui"></div>
+                <button class="btn-primary" style="background:#EEE; color:#666;" onclick="addReminderRow()">+ Add Task Reminder</button>
             </div>
 
-            <h2>Eternal Script</h2>
-            <div id="config-container"></div>
-            <button class="btn-primary" style="width:100%;" onclick="addBlankTask()">+ Add Habit</button>
+            <h2>Design</h2>
+            <div class="theme-grid">
+                <div class="theme-control"><label>USER NAME</label><input type="text" id="name-input" onchange="state.name=this.value; save(); render();"></div>
+                <div class="theme-control"><label>WEEKLY GOAL (₹)</label><input type="number" id="goal-input" onchange="state.weeklyGoal=parseInt(this.value); save(); renderFinance();"></div>
+                <div class="theme-control"><label>BRAND NAME</label><input type="text" id="brand-input" onchange="state.brandName=this.value; save(); render();"></div>
+                <div class="theme-control"><label>BACKGROUND</label><input type="color" id="color-bg" onchange="updateTheme('bg', this.value)"></div>
+                <div class="theme-control"><label>CARD COLOR</label><input type="color" id="color-paper" onchange="updateTheme('paper', this.value)"></div>
+                <div class="theme-control"><label>TEXT COLOR</label><input type="color" id="color-text" onchange="updateTheme('text', this.value)"></div>
+                <div class="theme-control"><label>ACCENT COLOR</label><input type="color" id="color-accent" onchange="updateTheme('accent', this.value)"></div>
+            </div>
+
+            <h2>Module Manager</h2>
+            <div class="card">
+                <div class="toggle-card"><span>Mood Tracker</span><input type="checkbox" id="check-mood" onchange="toggleFeature('showMood', this.checked)"></div>
+                <div class="toggle-card"><span>Reading Room</span><input type="checkbox" id="check-reading" onchange="toggleFeature('showReading', this.checked)"></div>
+                <div class="toggle-card"><span>Syllabus Tracker</span><input type="checkbox" id="check-syllabus" onchange="toggleFeature('showSyllabus', this.checked)"></div>
+                <div class="toggle-card"><span>Debt Mode</span><input type="checkbox" id="check-debt" onchange="toggleFeature('allowDebt', this.checked)"></div>
+            </div>
+
+            <h2 id="title-syllabus-config" style="display:none;">Syllabus Management</h2>
+            <div id="card-syllabus-config" class="card" style="display:none;">
+                <div style="display:grid; grid-template-columns: 2fr 1fr 40px; gap:10px; margin-bottom:15px;">
+                    <input type="text" id="new-subj-name" placeholder="Subject (e.g. History)">
+                    <input type="number" id="new-subj-total" placeholder="Total Chapters">
+                    <button class="btn-check" style="width:100%; height:40px; border-radius:8px;" onclick="addSyllabusSubject()">+</button>
+                </div>
+                <div id="syllabus-config-list"></div>
+            </div>
             
+            <h2 style="margin-top:40px;">Daily Goals</h2>
+            <div id="config-container"></div>
+            <button class="btn-primary" style="background:#EEE; color:#666;" onclick="addBlankTask()">+ Add Task Habit</button>
             <div style="margin-top:60px; display:grid; grid-template-columns:1fr 1fr; gap:15px;">
-                <button class="btn-primary" style="background:#4A4947;" onclick="exportData()">💾 Backup</button>
-                <button class="btn-primary" style="background:var(--rose);" onclick="resetAll()">🚨 Reset</button>
+                <button class="btn-primary" style="background:#4A4947;" onclick="exportData()">💾 Export</button>
+                <button class="btn-primary" style="background:var(--rose);" onclick="resetAll()">🚨 RESET ALL</button>
             </div>
         </div>
 
-        <div id="view-plan" class="view">
-            <h2>Weekly Planner</h2>
-            <div id="planner-container"></div>
-            <button class="btn-primary" style="width:100%;" onclick="savePlan()">Lock Schedule</button>
-        </div>
+        <div id="view-plan" class="view"><h2>Weekly Planner</h2><div id="planner-container"></div><button class="btn-primary" onclick="savePlan()">Lock Weekly Schedule</button></div>
+        <div id="view-reading" class="view"><h2>Reading Room</h2><div id="book-list"></div><input type="text" id="book-title" placeholder="New Book..."><button class="btn-primary" onclick="addBook()">Add to Library</button></div>
+        <div id="view-history" class="view"><h2>Archives</h2><canvas id="progressChart" width="400" height="250"></canvas><div id="list-history" style="margin-top:40px;"></div></div>
     </div>
 </div>
-
 <script>
     const daysArr = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    
     const themeLibrary = {
         equinox: { bg: "#FAF9F6", text: "#4A4947", accent: "#A7B49E", paper: "#FFFFFF" },
         midnight: { bg: "#0F172A", text: "#F8FAFC", accent: "#FDE047", paper: "#1E293B" },
         nord: { bg: "#ECEFF4", text: "#2E3440", accent: "#81A1C1", paper: "#E5E9F0" },
+        forest: { bg: "#F0F2EB", text: "#2C3639", accent: "#3F4E4F", paper: "#DCDFD8" },
+        sakura: { bg: "#FFF5F5", text: "#5F4B4B", accent: "#E59999", paper: "#FFFFFF" },
+        solar: { bg: "#FDF6E3", text: "#657B83", accent: "#B58900", paper: "#EEE8D5" },
+        lavender: { bg: "#F8F7FF", text: "#4B4453", accent: "#9381FF", paper: "#FFFFFF" },
+        obsidian: { bg: "#000000", text: "#FFFFFF", accent: "#404040", paper: "#111111" },
+        coffee: { bg: "#F4F1EE", text: "#3E2723", accent: "#795548", paper: "#EFEBE9" },
+        matcha: { bg: "#F2F5F0", text: "#3D4437", accent: "#8A9A5B", paper: "#E8EDE4" },
         cyber: { bg: "#0D0221", text: "#00FFC8", accent: "#FF00E5", paper: "#1B065E" },
-        sakura: { bg: "#FFF5F5", text: "#5F4B4B", accent: "#E59999", paper: "#FFFFFF" }
+        royal: { bg: "#2D033B", text: "#E5B8F4", accent: "#810CA8", paper: "#C147E9" },
+        oceanic: { bg: "#E0F2F1", text: "#004D40", accent: "#26A69A", paper: "#B2DFDB" }
     };
 
     let state = JSON.parse(localStorage.getItem('equinoxChronosData')) || {
-        brandName: "The Equinox", name: "Traveler", balance: 0, journalMode: 'reward',
-        showMood: true, enableSleepLogic: true, sleepCredit: 50,
-        theme: { accent: "#A7B49E", bg: "#FAF9F6", paper: "#FFFFFF", text: "#4A4947" },
+        brandName: "The Equinox", name: "Traveler", balance: 0, isDarkMode: false, journalMode: 'reward',
+        showMood: true, showReading: true, showTravel: false, showProj: false, allowDebt: true, showSyllabus: false,
+        sleepTime: "23:00", remindTime: "22:00", reminders: [], notifiedJournal: false,
+        sleepCredit: 50, enableSleepLogic: true,
+        theme: { accent: "#A7B49E", bg: "#FAF9F6", paper: "#FFFFFF", text: "#4A4947", "header-text": "#4A4947", "btn-text": "#FFFFFF", "base-size": "16px", "font-head": "'Libre Baskerville', serif" },
         moods: [{e: "🌿", l: "Calm"}, {e: "✨", l: "Glow"}, {e: "☁️", l: "Low"}, {e: "😤", l: "Upset"}, {e: "😔", l: "Sad"}],
-        goals: [], weeklyPlan: {"Monday":[],"Tuesday":[],"Wednesday":[],"Thursday":[],"Friday":[],"Saturday":[],"Sunday":[]}, 
-        history: [], currentTasks: [], waterDrank: 0, currentMood: null, weeklyGoal: 2000, syllabus: []
+        goals: [], readingList: [], weeklyPlan: {"Monday":[],"Tuesday":[],"Wednesday":[],"Thursday":[],"Friday":[],"Saturday":[],"Sunday":[]}, 
+        history: [], currentTasks: [], waterDrank: 0, currentMood: null, weeklyGoal: 2000, dailySpent: 0, syllabus: []
     };
+    let myChart = null;
 
     function init() {
+        state.syllabus = state.syllabus || [];
+        state.journalMode = state.journalMode || 'reward';
+        state.sleepCredit = state.sleepCredit !== undefined ? state.sleepCredit : 50;
+        state.enableSleepLogic = state.enableSleepLogic !== undefined ? state.enableSleepLogic : true;
         const todayKey = new Date().toDateString();
         if (localStorage.getItem('lastResetKey') !== todayKey) resetDayLogic(todayKey);
         document.getElementById('display-date').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+        document.getElementById('sleep-input').value = state.sleepTime;
+        document.getElementById('remind-input').value = state.remindTime;
+        document.getElementById('goal-input').value = state.weeklyGoal;
+        document.getElementById('mode-select').value = state.journalMode;
         document.getElementById('sleep-credit-input').value = state.sleepCredit;
-        document.getElementById('check-sleep-logic').checked = state.enableSleepLogic;
-        syncUI(); applyTheme(); render(); renderPlan(); renderConfig(); renderSyllabusConfig(); renderMoodConfig();
+        syncUI(); applyTheme(); render(); renderPlan(); renderConfig(); renderThoughtLog(); renderReminderUI(); renderSyllabusConfig(); renderMoodConfig();
+        startTimerEngine();
     }
 
     function resetDayLogic(today) {
         if (localStorage.getItem('lastResetKey') && state.enableSleepLogic) {
-            showModal(`<h2>Morning Check</h2><p>Sleep by target?</p><button class="btn-primary" onclick="resolveSleep(true)">Yes (₹${state.sleepCredit})</button><button class="btn-primary" style="background:#EEE; color:#666; margin-top:10px;" onclick="resolveSleep(false)">No</button>`);
+            showModal(`<h2>Morning Check</h2><p>Did you sleep by target?</p><button class="btn-primary" onclick="resolveSleep(true)">Yes (₹${state.sleepCredit})</button><button class="btn-primary" style="background:#EEE; color:#666; margin-top:10px;" onclick="resolveSleep(false)">No</button>`);
         } else finalizeReset(today);
     }
     function resolveSleep(s) { if(s && state.journalMode === 'reward') state.balance += state.sleepCredit; finalizeReset(new Date().toDateString()); closeModal(); }
 
     function finalizeReset(today) {
         let earned = 0;
-        state.currentTasks.forEach(t => { if (t.isDone && t.isCreditable) earned += t.reward; else if (!t.isDone && t.isTaxable) state.balance -= t.tax; });
-        state.history.unshift({ date: localStorage.getItem('lastResetKey'), earned, balance: state.balance, mood: state.currentMood, notes: document.getElementById('input-notes').value });
+        const currentNotes = document.getElementById('input-notes').value;
+        state.currentTasks.forEach(t => { if (t.isDone && t.isCreditable) { earned += t.reward; } else if (!t.isDone && t.isTaxable) state.balance -= t.tax; });
+        state.history.unshift({ date: localStorage.getItem('lastResetKey'), earned, spent: (state.dailySpent || 0), balance: state.balance, mood: state.currentMood, notes: currentNotes });
         state.currentTasks = state.goals.map(g => ({...g, isDone: false}));
         manualSyncWeekly();
-        state.waterDrank = 0; state.currentMood = null; document.getElementById('input-notes').value = '';
+        state.dailySpent = 0; state.currentMood = null; state.waterDrank = 0;
+        document.getElementById('input-notes').value = '';
+        state.notifiedJournal = false; state.reminders.forEach(r => r.fired = false);
         localStorage.setItem('lastResetKey', today); save(); render();
     }
 
@@ -307,35 +429,133 @@
         if (state.weeklyPlan[dName]) {
             state.weeklyPlan[dName].forEach(q => {
                 const questTitle = "Quest: " + q.title;
-                if (!state.currentTasks.some(t => t.title === questTitle)) state.currentTasks.push({ title: questTitle, reward: q.reward || 50, tax: q.tax || 20, isCreditable: true, isTaxable: true, isDone: false });
+                if (!state.currentTasks.some(t => t.title === questTitle)) {
+                    state.currentTasks.push({ title: questTitle, reward: q.reward || 50, tax: q.tax || 20, isCreditable: true, isTaxable: true, isDone: false });
+                }
             });
         }
         render(); save();
     }
 
     function manualSyncGlobal() {
-        state.goals.forEach(g => { if (!state.currentTasks.some(t => t.title === g.title)) state.currentTasks.push({ ...g, isDone: false }); });
+        state.goals.forEach(g => { if (!state.currentTasks.some(t => t.title === g.title)) { state.currentTasks.push({ ...g, isDone: false }); } });
         render(); save();
     }
 
     function addWater(v) { state.waterDrank = Math.max(0, state.waterDrank + v); save(); render(); }
 
+    function addSyllabusSubject() {
+        const name = document.getElementById('new-subj-name').value;
+        const total = parseInt(document.getElementById('new-subj-total').value);
+        if(name && total) {
+            state.syllabus.push({ name, total, completed: 0 });
+            document.getElementById('new-subj-name').value = '';
+            document.getElementById('new-subj-total').value = '';
+            save(); renderSyllabusConfig(); render();
+        }
+    }
+
+    function renderSyllabusConfig() {
+        const list = document.getElementById('syllabus-config-list');
+        if (!list) return;
+        list.innerHTML = state.syllabus.map((s, i) => `
+            <div style="display:grid; grid-template-columns: 2fr 1fr 40px; gap:10px; margin-bottom:10px;">
+                <input type="text" value="${s.name}" onchange="state.syllabus[${i}].name=this.value; save(); render();">
+                <input type="number" value="${s.total}" onchange="state.syllabus[${i}].total=parseInt(this.value); save(); render();">
+                <button onclick="state.syllabus.splice(${i},1); save(); renderSyllabusConfig(); render();" style="border:none; background:none; color:var(--rose); font-size:1.2rem;">×</button>
+            </div>
+        `).join('');
+    }
+
+    function renderMoodConfig() {
+        const list = document.getElementById('mood-config-list');
+        if (!list) return;
+        list.innerHTML = state.moods.map((m, i) => `
+            <div style="display:grid; grid-template-columns: 1fr 2fr 40px; gap:10px; margin-bottom:10px;">
+                <input type="text" value="${m.e}" placeholder="Emoji" onchange="state.moods[${i}].e=this.value; save(); render();">
+                <input type="text" value="${m.l}" placeholder="Label" onchange="state.moods[${i}].l=this.value; save(); render();">
+                <button onclick="state.moods.splice(${i},1); save(); renderMoodConfig(); render();" style="border:none; background:none; color:var(--rose); font-size:1.2rem;">×</button>
+            </div>
+        `).join('');
+    }
+
     function addMood() { state.moods.push({e: "😶", l: "Neutral"}); save(); renderMoodConfig(); render(); }
+
+    function renderSyllabusProgress() {
+        const container = document.getElementById('syllabus-container');
+        if (!container) return;
+        container.innerHTML = state.syllabus.map((s, i) => {
+            const perc = Math.min((s.completed / s.total) * 100, 100);
+            return `<div class="card"><div style="display:flex; justify-content:space-between; align-items:center;"><span class="stat-label">${s.name}</span><span style="font-size:0.7rem; font-weight:bold;">${s.completed} / ${s.total} Ch.</span></div><div class="goal-bar-bg"><div class="goal-bar-fill" style="width:${perc}%"></div></div><div style="display:flex; gap:5px; margin-top:10px;"><button class="btn-primary" style="margin:0; padding:5px; font-size:0.5rem; background:var(--line); color:var(--text);" onclick="adjustSubj(${i}, -1)">-1</button><button class="btn-primary" style="margin:0; padding:5px; font-size:0.5rem; background:var(--line); color:var(--text);" onclick="adjustSubj(${i}, 1)">+1</button></div></div>`;
+        }).join('');
+    }
+
+    function adjustSubj(i, v) { state.syllabus[i].completed = Math.max(0, Math.min(state.syllabus[i].total, state.syllabus[i].completed + v)); save(); render(); }
+
+    function startTimerEngine() {
+        setInterval(() => {
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+            if (timeStr === state.remindTime && !state.notifiedJournal) {
+                showModal(`<h2>Journal Update</h2><p>Time to log!</p><button class="btn-primary" onclick="closeModal()">OK</button>`);
+                state.notifiedJournal = true;
+            }
+            state.reminders.forEach(r => {
+                if (timeStr === r.time && !r.fired) {
+                    showModal(`<h2>Reminder</h2><p>${r.msg}</p><button class="btn-primary" onclick="closeModal()">Dismiss</button>`);
+                    r.fired = true;
+                }
+            });
+        }, 10000);
+    }
+
+    function restoreDebt() { if (state.balance < 0) { state.balance = 0; state.history.forEach(h => { if(h.balance < 0) h.balance = 0; }); save(); render(); alert("Balance restored."); } }
+
+    function renderFinance() {
+        if (state.journalMode === 'simple') return;
+        const last7 = state.history.slice(0, 7);
+        const currentEarnedToday = state.currentTasks.filter(t => t.isDone && t.isCreditable).reduce((a, b) => a + b.reward, 0);
+        const weekEarn = last7.reduce((a, b) => a + (b.earned || 0), 0) + currentEarnedToday;
+        const weekSpent = last7.reduce((a, b) => a + (b.spent || 0), 0) + (state.dailySpent || 0);
+        document.getElementById('f-week-earn').innerText = `₹${weekEarn}`;
+        document.getElementById('f-week-spent').innerText = `₹${weekSpent}`;
+        document.getElementById('f-goal-text').innerText = `₹${weekEarn} / ₹${state.weeklyGoal}`;
+        const perc = Math.min((weekEarn / state.weeklyGoal) * 100, 100);
+        document.getElementById('f-goal-bar').style.width = perc + '%';
+        const gap = state.weeklyGoal - weekEarn;
+        document.getElementById('f-gap-text').innerText = gap > 0 ? `Earn ₹${gap} more this week.` : "Goal Achieved! 🌟";
+    }
 
     function applyTheme() {
         const r = document.documentElement.style;
-        Object.keys(state.theme).forEach(k => r.setProperty('--'+k, state.theme[k]));
+        if (state.isDarkMode) {
+            r.removeProperty('--bg'); r.removeProperty('--text'); r.removeProperty('--header-text'); r.removeProperty('--paper'); r.removeProperty('--line');
+        } else {
+            Object.keys(state.theme).forEach(k => r.setProperty('--'+k, state.theme[k]));
+        }
         document.body.classList.toggle('dark-mode', state.isDarkMode);
+    }
+
+    function applyThemePreset(presetName) {
+        const selectedTheme = themeLibrary[presetName];
+        if (selectedTheme) {
+            state.theme.bg = selectedTheme.bg; state.theme.paper = selectedTheme.paper; state.theme.text = selectedTheme.text;
+            state.theme.accent = selectedTheme.accent; state.theme["header-text"] = selectedTheme.text;
+            applyTheme(); save(); render();
+        }
     }
 
     function render() {
         document.getElementById('dash-mood').style.display = state.showMood ? 'block' : 'none';
+        document.getElementById('side-reading').style.display = state.showReading ? 'block' : 'none';
         document.getElementById('nav-syllabus').style.display = state.showSyllabus ? 'block' : 'none';
+        document.getElementById('title-syllabus-config').style.display = state.showSyllabus ? 'block' : 'none';
         document.getElementById('card-syllabus-config').style.display = state.showSyllabus ? 'block' : 'none';
         document.getElementById('display-water').innerText = state.waterDrank;
         
         const isReward = state.journalMode === 'reward';
         document.querySelectorAll('.money-ui').forEach(el => el.style.display = isReward ? 'block' : 'none');
+        document.getElementById('side-finance').style.display = isReward ? 'block' : 'none';
         
         const balEl = document.getElementById('display-balance');
         balEl.innerText = `₹${state.balance}`;
@@ -345,55 +565,77 @@
         const overallDebt = state.history.reduce((acc, curr) => acc + (curr.balance < 0 ? curr.balance : 0), 0);
         document.getElementById('stat-week-debt').innerText = `₹${Math.abs(weeksDebt)}`;
         document.getElementById('stat-total-debt').innerText = `₹${Math.abs(overallDebt)}`;
-        document.getElementById('goal-bar').style.width = isReward ? Math.min((state.balance / (state.weeklyGoal || 2000)) * 100, 100) + '%' : '0%';
+        document.getElementById('btn-restore').style.display = (isReward && state.balance < 0) ? 'block' : 'none';
+        document.getElementById('goal-bar').style.width = isReward ? Math.min((state.balance / state.weeklyGoal) * 100, 100) + '%' : '0%';
         
         document.getElementById('greeting').innerText = "WELCOME, " + (state.name ? state.name.toUpperCase() : "TRAVELER");
         document.getElementById('mood-display').innerHTML = state.moods.map(m => `<div class="mood-btn ${state.currentMood === m.e ? 'selected' : ''}" onclick="state.currentMood='${m.e}'; save(); render();">${m.e}</div>`).join('');
         
         document.getElementById('list-tasks').innerHTML = state.currentTasks.map((t, i) => `
             <div class="task-row ${t.isDone ? 'done' : ''}">
-                <div class="task-info"><b>${t.title}</b><br><small>${isReward ? (t.isCreditable ? '+₹'+t.reward : 'Habit') : ''}</small></div>
+                <div class="task-info"><b>${t.title}</b><br><small>${isReward ? (t.isCreditable ? '+₹'+t.reward : 'Required') : ''}</small></div>
                 <button class="btn-check" onclick="completeTask(${i})">✔</button>
             </div>`).join('');
         
+        if (isReward) renderFinance();
         if (state.showSyllabus) renderSyllabusProgress();
-        renderThoughtLog();
     }
 
+    function renderThoughtLog() {
+        const entries = state.history.filter(h => h.notes && h.notes.trim() !== "");
+        document.getElementById('thought-log-container').innerHTML = entries.length > 0 ? entries.map(h => `<div class="thought-entry"><div class="thought-date">${h.date}</div><div>"${h.notes}"</div></div>`).join('') : '<p>Vault is empty.</p>';
+    }
+
+    function syncUI() { document.getElementById('check-mood').checked = state.showMood; document.getElementById('name-input').value = state.name; document.getElementById('check-syllabus').checked = state.showSyllabus; document.getElementById('mode-select').value = state.journalMode; document.getElementById('check-sleep-logic').checked = state.enableSleepLogic; }
+    function updateTheme(p, v) { state.theme[p] = v; applyTheme(); save(); }
+    
+    function renderPlan() { 
+        document.getElementById('planner-container').innerHTML = daysArr.map(d => `
+            <div class="day-block"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;"><b style="letter-spacing:1px;">${d.toUpperCase()}</b><button class="btn-primary" style="margin:0; padding:5px 12px; font-size:0.6rem; background:var(--line); color:var(--text); border:1px solid var(--accent);" onclick="addPlanRow('${d}')">+ ADD QUEST</button></div>
+            <div class="planner-grid-header"><span>Quest Title</span><span>Reward</span><span>Penalty</span><span></span></div>
+            <div id="plan-rows-${d}">${state.weeklyPlan[d].map((q, idx) => `
+                <div class="planner-row"><input type="text" value="${q.title || ''}" onchange="state.weeklyPlan['${d}'][${idx}].title=this.value; save();"><input type="number" value="${q.reward || 50}" onchange="state.weeklyPlan['${d}'][${idx}].reward=parseInt(this.value); save();"><input type="number" value="${q.tax || 20}" onchange="state.weeklyPlan['${d}'][${idx}].tax=parseInt(this.value); save();"><button onclick="state.weeklyPlan['${d}'].splice(${idx},1); renderPlan(); save();" style="border:none; background:none; color:var(--rose); font-size:1.2rem;">×</button></div>`).join('')}</div></div>`).join(''); 
+    }
+    
+    function addPlanRow(d) { state.weeklyPlan[d].push({title: "", reward: 50, tax: 20}); renderPlan(); }
+    function savePlan() { save(); alert("Plan Saved."); showView('today'); }
+    function renderConfig() { 
+        const header = '<div class="config-header-row"><span>TASK</span><span>REWARD</span><span>PENALTY</span><span>CRED?</span><span>TAX?</span><span></span></div>';
+        document.getElementById('config-container').innerHTML = header + state.goals.map((g, i) => `<div class="settings-row" style="display:grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 40px; gap:5px; margin-bottom:10px;"><input type="text" value="${g.title}" onchange="state.goals[${i}].title=this.value"><input type="number" value="${g.reward}" onchange="state.goals[${i}].reward=parseInt(this.value)"><input type="number" value="${g.tax}" onchange="state.goals[${i}].tax=parseInt(this.value)"><input type="checkbox" ${g.isCreditable ? 'checked' : ''} onchange="state.goals[${i}].isCreditable=this.checked"><input type="checkbox" ${g.isTaxable ? 'checked' : ''} onchange="state.goals[${i}].isTaxable=this.checked"><button onclick="state.goals.splice(${i},1); renderConfig();">×</button></div>`).join(''); 
+    }
+    function exportData() { const dl = document.createElement('a'); dl.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state))); dl.setAttribute("download", "equinox_backup.json"); dl.click(); }
+    function resetAll() { if(confirm("Clear all data?")) { localStorage.clear(); location.reload(); } }
+    function showView(id) { document.querySelectorAll('.view, .nav-link').forEach(el => el.classList.remove('active')); document.getElementById('view-' + id).classList.add('active'); document.getElementById('nav-' + id).classList.add('active'); if(id==='history') initChart(); if(id==='finance' && state.journalMode==='reward') renderFinance(); }
+    function save() { localStorage.setItem('equinoxChronosData', JSON.stringify(state)); }
+    
     function completeTask(i) { 
         if(!state.currentTasks[i].isDone) { 
             if(state.journalMode === 'reward' && state.currentTasks[i].isCreditable) state.balance += state.currentTasks[i].reward; 
-            if(state.showSyllabus) {
+            if(state.showSyllabus && state.syllabus.length > 0) {
                 const titleLower = state.currentTasks[i].title.toLowerCase();
-                state.syllabus.forEach(subj => { if(titleLower.includes(subj.name.toLowerCase())) subj.completed = Math.min(subj.total, subj.completed + 1); });
+                state.syllabus.forEach(subj => { if(titleLower.includes(subj.name.toLowerCase())) { subj.completed = Math.min(subj.total, subj.completed + 1); } });
             }
             state.currentTasks[i].isDone = true; save(); render(); 
         } 
     }
 
-    function spendMoney() { const a = parseInt(document.getElementById('spend-amt').value); if(a) { state.balance -= a; document.getElementById('spend-amt').value = ''; save(); render(); } }
-    function showView(id) { document.querySelectorAll('.view, .nav-link').forEach(el => el.classList.remove('active')); document.getElementById('view-' + id).classList.add('active'); document.getElementById('nav-' + id).classList.add('active'); }
-    function save() { localStorage.setItem('equinoxChronosData', JSON.stringify(state)); }
+    function spendMoney() { if(state.journalMode === 'simple') return; const a = parseInt(document.getElementById('spend-amt').value); if(a) { if(!state.allowDebt && state.balance - a < 0) return alert("Debt disabled."); state.balance -= a; state.dailySpent = (state.dailySpent || 0) + a; document.getElementById('spend-amt').value = ''; save(); render(); } }
+    function toggleFeature(k, v) { state[k] = v; save(); render(); }
+    function toggleEclipse() { state.isDarkMode = !state.isDarkMode; applyTheme(); save(); if(myChart) initChart(); }
     function toggleSnapshot() { document.body.classList.toggle('snapshot-mode'); }
-    function applyThemePreset(p) { const s = themeLibrary[p]; state.theme = s; applyTheme(); save(); render(); }
-
-    /* REMAINDER OF LOGIC (Syllabus, Plan, Mood config) KEPT EXACTLY THE SAME */
-    function renderSyllabusConfig() { document.getElementById('syllabus-config-list').innerHTML = state.syllabus.map((s, i) => `<div style="display:grid; grid-template-columns: 2fr 1fr 40px; gap:10px; margin-bottom:10px;"><input type="text" value="${s.name}" onchange="state.syllabus[${i}].name=this.value; save();"><input type="number" value="${s.total}" onchange="state.syllabus[${i}].total=parseInt(this.value); save();"><button onclick="state.syllabus.splice(${i},1); save(); renderSyllabusConfig();" style="border:none; background:none; color:var(--rose);">×</button></div>`).join(''); }
-    function addSyllabusSubject() { const n = document.getElementById('new-subj-name').value, t = parseInt(document.getElementById('new-subj-total').value); if(n && t) { state.syllabus.push({name:n, total:t, completed:0}); save(); renderSyllabusConfig(); render(); } }
-    function renderSyllabusProgress() { document.getElementById('syllabus-container').innerHTML = state.syllabus.map((s, i) => { const p = Math.min((s.completed / s.total) * 100, 100); return `<div class="card"><div style="display:flex; justify-content:space-between;"><span>${s.name}</span><small>${s.completed}/${s.total}</small></div><div class="goal-bar-bg"><div class="goal-bar-fill" style="width:${p}%"></div></div></div>`; }).join(''); }
-    function renderMoodConfig() { document.getElementById('mood-config-list').innerHTML = state.moods.map((m, i) => `<div style="display:grid; grid-template-columns: 1fr 2fr 40px; gap:10px; margin-bottom:10px;"><input type="text" value="${m.e}" onchange="state.moods[${i}].e=this.value; save();"><input type="text" value="${m.l}" onchange="state.moods[${i}].l=this.value; save();"><button onclick="state.moods.splice(${i},1); save(); renderMoodConfig();" style="border:none; background:none; color:var(--rose);">×</button></div>`).join(''); }
-    function renderPlan() { document.getElementById('planner-container').innerHTML = daysArr.map(d => `<div class="day-block"><b style="display:block; margin-bottom:10px;">${d}</b><div id="plan-rows-${d}">${(state.weeklyPlan[d]||[]).map((q, idx) => `<div class="planner-row"><input type="text" value="${q.title}" onchange="state.weeklyPlan['${d}'][${idx}].title=this.value; save();"><button onclick="state.weeklyPlan['${d}'].splice(${idx},1); renderPlan();">×</button></div>`).join('')}</div><button onclick="state.weeklyPlan['${d}'].push({title:'', reward:50, tax:20}); renderPlan();">+ Add</button></div>`).join(''); }
-    function savePlan() { save(); alert("Saved"); showView('today'); }
-    function renderConfig() { document.getElementById('config-container').innerHTML = state.goals.map((g, i) => `<div class="settings-row" style="display:grid; grid-template-columns: 2fr 1fr 1fr 40px; gap:5px; margin-bottom:10px;"><input type="text" value="${g.title}" onchange="state.goals[${i}].title=this.value"><input type="number" value="${g.reward}" onchange="state.goals[${i}].reward=parseInt(this.value)"><input type="number" value="${g.tax}" onchange="state.goals[${i}].tax=parseInt(this.value);"><button onclick="state.goals.splice(${i},1); renderConfig();">×</button></div>`).join(''); }
-    function renderThoughtLog() { const entries = state.history.filter(h => h.notes && h.notes.trim() !== ""); document.getElementById('thought-log-container').innerHTML = entries.length > 0 ? entries.map(h => `<div class="card" style="font-style:italic; font-size:0.8rem;"><div style="font-size:0.6rem; color:var(--accent); font-weight:700;">${h.date}</div>${h.notes}</div>`).join('') : '<p>Empty</p>'; }
-    function addBlankTask() { state.goals.push({title: "New habit", reward: 10, tax: 5, isCreditable: true, isTaxable: true}); renderConfig(); }
+    function addBlankTask() { state.goals.push({title: "Habit", reward: 10, tax: 5, isCreditable: true, isTaxable: true}); renderConfig(); }
     function showModal(h) { document.getElementById('modal-content').innerHTML = h; document.getElementById('modal-overlay').style.display = 'flex'; }
     function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
-    function exportData() { const dl = document.createElement('a'); dl.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state))); dl.setAttribute("download", "equinox_backup.json"); dl.click(); }
-    function resetAll() { if(confirm("Clear data?")) { localStorage.clear(); location.reload(); } }
-    function toggleFeature(k, v) { state[k] = v; save(); render(); }
-    function addReminderRow() {} // Placeholder for existing logic
-
+    function renderReminderUI() { document.getElementById('reminders-list-ui').innerHTML = state.reminders.map((r, i) => `<div style="display:flex; gap:10px; margin-bottom:5px;"><input type="time" value="${r.time}" onchange="state.reminders[${i}].time=this.value; save();"><input type="text" value="${r.msg}" onchange="state.reminders[${i}].msg=this.value; save();"><button onclick="state.reminders.splice(${i},1); renderReminderUI(); save();">×</button></div>`).join(''); }
+    function addReminderRow() { state.reminders.push({time: "12:00", msg: "Task Reminder", fired: false}); renderReminderUI(); }
+    function addBook() { const t = document.getElementById('book-title').value; if(t) {state.readingList.push({title:t}); document.getElementById('book-title').value=''; save(); renderReading();}}
+    function renderReading() { document.getElementById('book-list').innerHTML = state.readingList.map((b,i) => `<div class="card" style="display:flex; justify-content:space-between;"><span>${b.title}</span><small style="color:var(--rose); cursor:pointer;" onclick="state.readingList.splice(${i},1); save(); renderReading();">Delete</small></div>`).join(''); }
+    function initChart() {
+        const ctx = document.getElementById('progressChart').getContext('2d'); if (myChart) myChart.destroy();
+        const l7 = state.history.slice(0, 7).reverse();
+        myChart = new Chart(ctx, { type: 'line', data: { labels: l7.map(h => h.date ? h.date.split(' ')[1] : ''), datasets: [{ label: 'Wallet', data: l7.map(h => h.balance), borderColor: state.theme.accent, tension: 0.4 }] }, options: { scales: { x: { ticks: { color: state.isDarkMode ? '#AAA' : '#444' } }, y: { ticks: { color: state.isDarkMode ? '#AAA' : '#444' } } } } });
+        document.getElementById('list-history').innerHTML = state.history.map(h => `<div style="padding:10px; border-bottom:1px solid var(--line);"><b>${h.date}</b> <span style="float:right">₹${h.earned}</span></div>`).join('');
+    }
     init();
 </script>
 </body>
